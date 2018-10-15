@@ -1,5 +1,44 @@
 const nbr6123 = require('./nbr6123');
 
+describe('testa funções auxiliares',  () => {
+	it ("Deve retornar o resultado de uma interpolação", () => {
+		expect(nbr6123.interpolar(1, 0.1, 1.5, 0.3, 1.2)).toEqual(0.18);
+	});
+
+	it ("Deve retornar o resultado de uma interpolação de objetos populados com valores", () => {
+		let joc = jasmine.objectContaining;
+
+		expect(nbr6123.interpolarCoeficientes(
+			1.5,
+			{
+				a1: -0.8,
+				b1: -0.8,
+				a2: -0.5,
+				b2: -0.5,
+				c: 0.7,
+				d: -0.4
+			},
+			2,
+			{
+				a1: -0.8,
+				b1: -0.8,
+				a2: -0.4,
+				b2: -0.4,
+				c: 0.7,
+				d: -0.3
+			},
+			1.8
+		)).toEqual(joc({
+			a1: -0.8,
+			b1: -0.8,
+			a2: -0.44,
+			b2: -0.44,
+			c: 0.7,
+			d: -0.33999999999999997
+		}));
+	});
+});
+
 describe(`Testa os getters de fator topografico`, () => {
   it (`Deve retornar o fator topografico de um edificio alocado em terreno plano`, () => {
     expect(nbr6123.getFatorTopografico(0, 3, 5, 0)).toEqual(1);
@@ -336,5 +375,170 @@ describe(`Bateria de testes para validar a obtenção dos valores de pressão ex
 				d2: -0.6
 			})
 		}));
+	});
+
+	it("Deve retornar coeficientes de pressão interna com abertura dominante na secao c1 e proporção" +
+		"entre abertura dominante e outras aberturas igual a 1.0", () => {
+		let joc = jasmine.objectContaining;
+
+		expect(nbr6123.getCoeficienteDePressaoInterna({
+			tipoPermeabilidade: "abertura dominante",
+			areaAberturaDominante: 2,
+			areaOutrasAberturas: 2,
+			secaoDaAbertura: 'c1',
+			coefsPressaoExterna: {
+				ventoAZero: {
+					a1: -1.0,
+					b1: -1.0,
+					a2: -0.5,
+					b2: -0.5,
+					c: 0.8,
+					d: -0.3
+				},
+				ventoANoventa: {
+					a: 0.8,
+					b: -0.6,
+					c1: -1.0,
+					d1: -1.0,
+					c2: -0.6,
+					d2: -0.6
+				}
+			}
+		})).toEqual(joc({
+			ventoAZero: 0.1,
+			ventoANoventa: -0.7
+		}));
+	});
+
+	it("Deve retornar coeficientes de pressão interna de abertura dominante na secao c1 e proporção" +
+		"entre abertura dominante e outras aberturas igual a 1.5", () => {
+		let joc = jasmine.objectContaining;
+
+		expect(nbr6123.getCoeficienteDePressaoInterna({
+			tipoPermeabilidade: "abertura dominante",
+			areaAberturaDominante: 3,
+			areaOutrasAberturas: 2,
+			secaoDaAbertura: 'c1',
+			coefsPressaoExterna: {
+				ventoAZero: {
+					a1: -1.0,
+					b1: -1.0,
+					a2: -0.5,
+					b2: -0.5,
+					c: 0.8,
+					d: -0.3
+				},
+				ventoANoventa: {
+					a: 0.8,
+					b: -0.6,
+					c1: -1.0,
+					d1: -1.0,
+					c2: -0.6,
+					d2: -0.6
+				}
+			}
+		})).toEqual(joc({
+			ventoAZero: 0.3,
+			ventoANoventa: -0.8
+		}));
+	});
+
+	it("Deve retornar coeficientes de pressão interna de abertura dominante na secao a3 e proporção" +
+		"entre abertura dominante e outras aberturas igual a 1.5", () => {
+		let joc = jasmine.objectContaining;
+
+		let coeficientesPressaoExterna = nbr6123.getCoeficienteDeFormaParedesPlantaRetangular({
+			a: 60, b: 20, h: 10
+		});
+
+		expect(nbr6123.getCoeficienteDePressaoInterna({
+			tipoPermeabilidade: "abertura dominante",
+			areaAberturaDominante: 3,
+			areaOutrasAberturas: 2,
+			secaoDaAbertura: 'a3',
+			coefsPressaoExterna: coeficientesPressaoExterna
+		})).toEqual(joc({
+			ventoAZero: -0.2,
+			ventoANoventa: 0.3
+		}));
+	});
+
+	it("Deve retornar coeficientes de pressão interna de abertura dominante na secao b3 e proporção" +
+		"entre abertura dominante e outras aberturas igual a 1.5", () => {
+		let joc = jasmine.objectContaining;
+
+		let coeficientesPressaoExterna = nbr6123.getCoeficienteDeFormaParedesPlantaRetangular({
+			a: 60, b: 20, h: 10
+		});
+
+		expect(nbr6123.getCoeficienteDePressaoInterna({
+			tipoPermeabilidade: "abertura dominante",
+			areaAberturaDominante: 3,
+			areaOutrasAberturas: 2,
+			secaoDaAbertura: 'b3',
+			coefsPressaoExterna: coeficientesPressaoExterna
+		})).toEqual(joc({
+			ventoAZero: -0.2,
+			ventoANoventa: -0.5
+		}));
+	});
+
+	it("Deve retornar os indices de pressão interna de uma edificação com as quatro faces igualmente permeáveis", () => {
+		let joc = jasmine.objectContaining;
+
+		expect(nbr6123.getCoeficienteDePressaoInterna({
+			tipoPermeabilidade: "quatro faces",
+			secaoDaAbertura: 'c1',
+			coefsPressaoExterna: {
+				ventoAZero: {
+					a1: -1.0,
+					b1: -1.0,
+					a2: -0.5,
+					b2: -0.5,
+					c: 0.8,
+					d: -0.3
+				},
+				ventoANoventa: {
+					a: 0.8,
+					b: -0.6,
+					c1: -1.0,
+					d1: -1.0,
+					c2: -0.6,
+					d2: -0.6
+				}
+			}
+		})).toEqual([0, -0.3]);
+	});
+
+	it("Deve retornar os indices de pressão interna de uma edificação com as quatro faces igualmente permeáveis", () => {
+		let joc = jasmine.objectContaining;
+
+		expect(nbr6123.getCoeficienteDePressaoInterna({
+			tipoPermeabilidade: "faces opostas",
+			secaoDaAbertura: 'c1',
+			coefsPressaoExterna: {
+				ventoAZero: {
+					a1: -1.0,
+					b1: -1.0,
+					a2: -0.5,
+					b2: -0.5,
+					c: 0.8,
+					d: -0.3
+				},
+				ventoANoventa: {
+					a: 0.8,
+					b: -0.6,
+					c1: -1.0,
+					d1: -1.0,
+					c2: -0.6,
+					d2: -0.6
+				}
+			}
+		})).toEqual([0.2, -0.3]);
+	});
+
+	it("Deve retornar os indices de pressão interna de uma edificação com as quatro faces igualmente permeáveis", () => {
+		let joc = jasmine.objectContaining;
+
 	});
 });

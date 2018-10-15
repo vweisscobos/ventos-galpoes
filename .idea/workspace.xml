@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e800d454-93ff-4012-ab55-46077df326b9" name="Default" comment="" />
+    <list default="true" id="e800d454-93ff-4012-ab55-46077df326b9" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/nbr6123.js" beforeDir="false" afterPath="$PROJECT_DIR$/modules/nbr6123.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/nbr6123.spec.js" beforeDir="false" afterPath="$PROJECT_DIR$/modules/nbr6123.spec.js" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/../untitled1/.tmp/" />
     <ignored path="$PROJECT_DIR$/../untitled1/temp/" />
     <ignored path="$PROJECT_DIR$/../untitled1/tmp/" />
@@ -15,19 +20,23 @@
     <session id="-1206716504">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="2" />
+          <entry key="project.closed" value="4" />
           <entry key="project.open.time.11" value="1" />
-          <entry key="project.open.time.14" value="1" />
+          <entry key="project.open.time.14" value="2" />
+          <entry key="project.open.time.18" value="1" />
+          <entry key="project.open.time.21" value="1" />
           <entry key="project.open.time.24" value="1" />
+          <entry key="project.open.time.27" value="1" />
           <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.5" value="1" />
           <entry key="project.open.time.6" value="1" />
-          <entry key="project.opened" value="5" />
+          <entry key="project.opened" value="10" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts" />
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="js" value="8288" />
+          <entry key="js" value="13256" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
@@ -42,21 +51,21 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JavaScript" value="8288" />
+          <entry key="JavaScript" value="13256" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages" />
     </session>
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5097701">
+    <splitter split-orientation="horizontal" split-proportion="0.45418006">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/modules/nbr6123.spec.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="250">
-                  <caret line="319" column="11" lean-forward="true" selection-start-line="319" selection-start-column="11" selection-end-line="319" selection-end-column="11" />
+                <state relative-caret-position="124">
+                  <caret line="473" selection-start-line="473" selection-end-line="473" />
                 </state>
               </provider>
             </entry>
@@ -109,8 +118,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/modules/nbr6123.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="204">
-                  <caret line="316" column="2" lean-forward="true" selection-start-line="316" selection-start-column="2" selection-end-line="316" selection-end-column="2" />
+                <state relative-caret-position="4740">
+                  <caret line="316" column="2" selection-start-line="316" selection-start-column="2" selection-end-line="316" selection-end-column="2" />
                 </state>
               </provider>
             </entry>
@@ -122,8 +131,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/modules/nbr6123.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="129">
-                  <caret line="584" column="22" lean-forward="true" selection-start-line="584" selection-start-column="22" selection-end-line="584" selection-end-column="22" />
+                <state relative-caret-position="57">
+                  <caret line="701" column="70" lean-forward="true" selection-start-line="701" selection-start-column="70" selection-end-line="701" selection-end-column="70" />
                 </state>
               </provider>
             </entry>
@@ -131,6 +140,14 @@
         </leaf>
       </split-second>
     </splitter>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>console</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -141,8 +158,8 @@
         <option value="$PROJECT_DIR$/routes/isopletas.js" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/modules/nbr6123" />
-        <option value="$PROJECT_DIR$/modules/nbr6123.spec.js" />
         <option value="$PROJECT_DIR$/modules/nbr6123.js" />
+        <option value="$PROJECT_DIR$/modules/nbr6123.spec.js" />
       </list>
     </option>
   </component>
@@ -163,11 +180,11 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1382" />
-    <option name="height" value="744" />
+    <option name="y" value="-2" />
+    <option name="width" value="1920" />
+    <option name="height" value="1082" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -255,18 +272,23 @@
       <workItem from="1537731608276" duration="5912000" />
       <workItem from="1537909334896" duration="2895000" />
       <workItem from="1538325215865" duration="16027000" />
-      <workItem from="1538609346570" duration="6679000" />
+      <workItem from="1538609346570" duration="8076000" />
+      <workItem from="1538940330019" duration="1230000" />
+      <workItem from="1539039537943" duration="1930000" />
+      <workItem from="1539194254237" duration="2617000" />
+      <workItem from="1539305179314" duration="7478000" />
+      <workItem from="1539369174890" duration="10053000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="73121000" />
+    <option name="totallyTimeSpent" value="97826000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-2" width="1920" height="1082" extended-state="6" />
+    <frame x="0" y="25" width="1366" height="743" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.082762256" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.07371556" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -278,7 +300,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.25995806" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.32626426" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="10" show_stripe_button="false" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -331,17 +353,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/nbr6123.spec.js">
+    <entry file="file://$PROJECT_DIR$/modules/nbr6123.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="319" column="11" lean-forward="true" selection-start-line="319" selection-start-column="11" selection-end-line="319" selection-end-column="11" />
+        <state relative-caret-position="4740">
+          <caret line="316" column="2" selection-start-line="316" selection-start-column="2" selection-end-line="316" selection-end-column="2" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/nbr6123.js">
+    <entry file="file://$PROJECT_DIR$/modules/nbr6123.spec.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="584" column="22" lean-forward="true" selection-start-line="584" selection-start-column="22" selection-end-line="584" selection-end-column="22" />
+        <state relative-caret-position="124">
+          <caret line="473" selection-start-line="473" selection-end-line="473" />
         </state>
       </provider>
     </entry>

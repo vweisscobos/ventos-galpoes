@@ -411,7 +411,8 @@ const getCoeficienteDeFormaParedesPlantaRetangular = ({a, b, h}) => {
 	let alturaRelativa = h/b,
 			proporcaoEntreDimensoesHorizontais = a/b,
 			indiceAlturaRelativa,
-			indiceProporcaoDimensoesHorizontais;
+			indiceProporcaoDimensoesHorizontais,
+			coeficientesPressaoExterna;
 
 	if (alturaRelativa <= 1/2) {
 		indiceAlturaRelativa = 0;
@@ -422,25 +423,69 @@ const getCoeficienteDeFormaParedesPlantaRetangular = ({a, b, h}) => {
 	}
 
 	if (proporcaoEntreDimensoesHorizontais >= 1 && proporcaoEntreDimensoesHorizontais <= 3/2) {
-		indiceProporcaoDimensoesHorizontais = 0;
+		coeficientesPressaoExterna = tabela4[indiceAlturaRelativa][0];
 	}  else if (proporcaoEntreDimensoesHorizontais >= 2 && proporcaoEntreDimensoesHorizontais <= 4) {
-		indiceProporcaoDimensoesHorizontais = 1;
+		coeficientesPressaoExterna = tabela4[indiceAlturaRelativa][1];
+	} else if (proporcaoEntreDimensoesHorizontais > 3/2 && proporcaoEntreDimensoesHorizontais < 2) {
+		coeficientesPressaoExterna = interpolarCoeficientesDePressaoExterna(indiceAlturaRelativa, proporcaoEntreDimensoesHorizontais);
 	} else {
 		throw new Error('Valor inválido: faixa de valores inválidos')
 	}
 
-	return tabela4[indiceAlturaRelativa][indiceProporcaoDimensoesHorizontais];
+	coeficientesPressaoExterna.ventoAZero['a3'] = calcularA3eB3(
+		proporcaoEntreDimensoesHorizontais, coeficientesPressaoExterna.ventoAZero['a2']);
+	coeficientesPressaoExterna.ventoAZero['b3'] = calcularA3eB3(
+		proporcaoEntreDimensoesHorizontais, coeficientesPressaoExterna.ventoAZero['b2']);
+
+	return coeficientesPressaoExterna;
 };
 
-const getIndicesFatorDeFormaEPressao = (a, b, h, angVento) => {
-
+const calcularA3eB3 = (proporcaoDimensoeshorizontais, coefDeReferencia) => {
+	if (proporcaoDimensoeshorizontais === 1) return coefDeReferencia;
+	else if (proporcaoDimensoeshorizontais >= 2) return -0.2;
+	else {
+		return interpolar(1, coefDeReferencia, 2, -0.2, proporcaoDimensoeshorizontais);
+	}
 };
 
-const interpolar = (abs1, abs2, ord1, ord2, aCalcular) => {
+const interpolarCoeficientesDePressaoExterna = (indiceAlturaRelativa, proporcao) => {
+	let coeficientes = { ventoAZero: {}, ventoANoventa: {} };
+	let valoresParaProporcaoTresMeios = tabela4[indiceAlturaRelativa][0];
+	let valoresParaProporcaoDois = tabela4[indiceAlturaRelativa][1];
+
+	coeficientes.ventoAZero = interpolarCoeficientes(
+		1.5,
+		valoresParaProporcaoTresMeios.ventoAZero,
+		2,
+		valoresParaProporcaoDois.ventoAZero,
+		proporcao
+	);
+
+	coeficientes.ventoANoventa = interpolarCoeficientes(
+		1.5,
+		valoresParaProporcaoTresMeios.ventoANoventa,
+		2,
+		valoresParaProporcaoDois.ventoANoventa,
+		proporcao
+	);
+
+	return coeficientes;
+};
+
+const interpolarCoeficientes = (abs1, obj1, abs2, obj2, aCalcular) => {
+	let coeficientesInterpolados = {};
+
+	for (let val in obj1) {
+		coeficientesInterpolados[val] = interpolar(abs1, obj1[val], abs2, obj2[val], aCalcular);
+	};
+
+	return coeficientesInterpolados;
+};
+
+const interpolar = (abs1, ord1, abs2, ord2, aCalcular) => {
 	if (aCalcular < abs1 || aCalcular > abs2) throw new Error('Valor inválido: ' + aCalcular);
 
-	let deltaTotal = abs2 - abs1;
-	let deltaUnitario = ord2 - ord1 / deltaTotal;
+	let deltaUnitario = (ord2 - ord1) / (abs2 - abs1);
 
 	return ord1 + (aCalcular - abs1) * deltaUnitario;
 };
@@ -564,7 +609,10 @@ const tabela4 = [
 
 const getCoeficienteDePressaoInterna = ({
 	tipoPermeabilidade,
-	aberturaDominante
+	areaAberturaDominante,
+	areaOutrasAberturas,
+	secaoDaAbertura,
+	coefsPressaoExterna
 }) => {
 	switch(tipoPermeabilidade) {
 		case "faces opostas":
@@ -572,70 +620,161 @@ const getCoeficienteDePressaoInterna = ({
 		case "quatro faces":
 			return [0, -0.3];
 		case "abertura dominante":
-			return calcularIndicePressaoInternaAberturaDominante(aberturaDominante);
+			return calcularIndicePressaoInternaAberturaDominante(
+				areaAberturaDominante,
+				areaOutrasAberturas,
+				secaoDaAbertura,
+				coefsPressaoExterna
+			);
 	}
 };
 
-const calcularIndicePressaoInternaAberturaDominante = ({
-	aberturaQuandoVentoEmZero,
-  aberturaQuandoVentoEmNoventa,
-	proporcaoAberturas,
-	coefsPressaoExterna
-}) => {
-	let coeficientes = {
+const calcularIndicePressaoInternaAberturaDominante = (
+	 areaAberturaDominante,
+	 areaOutrasAberturas,
+	 secaoDaAbertura,
+	 coefsPressaoExterna
+) => {
+	const coeficientes = {
 		ventoAZero: 0,
 		ventoANoventa: 0
 	};
+	const proporcaoAberturas = areaAberturaDominante / areaOutrasAberturas;
 
-	switch (aberturaQuandoVentoEmNoventa) {
-		case "barlavento":
-			coeficientes.ventoANoventa = coefPressaoInternaBarlavento(proporcaoAberturas);
-		case "sotavento":
-			coeficientes.ventoANoventa = coefPressaoInternaSotavento(proporcaoAberturas, coefsPressaoExterna);
-		case "alta succao":
-			coeficientes.ventoANoventa = coefPressaoInternaAltaSuccao(proporcaoAberturas, coefsPressaoExterna);
-		case "baixa succao":
-			coeficientes.ventoANoventa = coefPressaoInternaBaixaSuccao(proporcaoAberturas, coefsPressaoExterna);
-	}
-
-	switch (aberturaQuandoVentoEmZero) {
-		case "barlavento":
-			coeficientes.ventoAZero = coefPressaoInternaBarlavento(proporcaoAberturas);
-		case "sotavento":
-			coeficientes.ventoAZero = coefPressaoInternaSotavento(proporcaoAberturas, coefsPressaoExterna);
-		case "alta succao":
-			coeficientes.ventoAZero = coefPressaoInternaAltaSuccao(proporcaoAberturas, coefsPressaoExterna);
-		case "baixa succao":
-			coeficientes.ventoAZero = coefPressaoInternaBaixaSuccao(proporcaoAberturas, coefsPressaoExterna);
-	}
+	coeficientes.ventoAZero = IndicePressaoInternaAberturaDominanteVentoAZero(
+		secaoDaAbertura, proporcaoAberturas, coefsPressaoExterna.ventoAZero);
+	coeficientes.ventoANoventa = IndicePressaoInternaAberturaDominanteVentoANoventa(
+		secaoDaAbertura, proporcaoAberturas, coefsPressaoExterna.ventoANoventa);
 
 	return coeficientes;
 };
 
-const coefPressaoInternaBarlavento = ({
+const IndicePressaoInternaAberturaDominanteVentoAZero = (
+	secao,
+	proporcaoAberturas,
+	coefsPressaoExterna
+) => {
 
-}) => {
+	secao = new RegExp(/c/).test(secao) ? 'c' : secao;
+	secao = new RegExp(/d/).test(secao) ? 'd' : secao;
 
+	switch(secao) {
+		case 'c':
+			return coefPressaoInternaBarlavento(proporcaoAberturas);
+		case 'a1':
+			return coefPressaoInternaAltaSuccao(proporcaoAberturas);
+		case 'b1':
+			return coefPressaoInternaAltaSuccao(proporcaoAberturas);
+		case 'a2':
+			return coefPressaoInternaBaixaSuccao('a2', coefsPressaoExterna);
+		case 'b2':
+			return coefPressaoInternaBaixaSuccao('b2', coefsPressaoExterna);
+		case 'a3':
+			return coefPressaoInternaBaixaSuccao('a3', coefsPressaoExterna);
+		case 'b3':
+			return coefPressaoInternaBaixaSuccao('b3', coefsPressaoExterna);
+		case 'd':
+			return coefPressaoInternaSotavento('d', coefsPressaoExterna);
+		default:
+			throw new Error('Seção de pressão externa inválida: ' + secao);
+	}
 };
 
-const coefPressaoInternaSotavento = ({
+const IndicePressaoInternaAberturaDominanteVentoANoventa = (
+	secao,
+	proporcaoAberturas,
+	coefsPressaoExterna
+) => {
 
-}) => {
+	secao = new RegExp(/a/).test(secao) ? 'a' : secao;
+	secao = new RegExp(/b/).test(secao) ? 'b' : secao;
 
+	switch(secao) {
+		case 'a':
+			return coefPressaoInternaBarlavento(proporcaoAberturas);
+		case 'c1':
+			return coefPressaoInternaAltaSuccao(proporcaoAberturas);
+		case 'd1':
+			return coefPressaoInternaAltaSuccao(proporcaoAberturas);
+		case 'c2':
+			return coefPressaoInternaBaixaSuccao('c2', coefsPressaoExterna);
+		case 'd2':
+			return coefPressaoInternaBaixaSuccao('d2', coefsPressaoExterna);
+		case 'b':
+			return coefPressaoInternaSotavento('b', coefsPressaoExterna);
+		default:
+			throw new Error('Seção de pressão externa inválida: ' + secao);
+	}
 };
 
-const coefPressaoInternaAltaSuccao = ({
-
-}) => {
-
+const coefPressaoInternaBarlavento = (proporcaoAbertura) => {
+	if (proporcaoAbertura === 1) {
+		return 0.1;
+	} else if (proporcaoAbertura === 1.5) {
+		return 0.3;
+	} else if (proporcaoAbertura === 2) {
+		return 0.5;
+	} else if (proporcaoAbertura === 3) {
+		return 0.6;
+	} else if (proporcaoAbertura >= 6) {
+		return 0.8;
+	}
 };
 
-const coefPressaoInternaBaixaSuccao = ({
-
-}) => {
-
+const coefPressaoInternaSotavento = (
+	secao,
+  coeficientes
+) => {
+	return coeficientes[secao];
 };
 
+const coefPressaoInternaAltaSuccao = (
+	proporcaoAbertura
+) => {
+
+	if (proporcaoAbertura === 0.25) {
+		return -0.4;
+	} else if (proporcaoAbertura === 0.50) {
+		return -0.5;
+	} else if (proporcaoAbertura === 0.75) {
+		return -0.6;
+	} else if (proporcaoAbertura === 1) {
+		return -0.7;
+	} else if (proporcaoAbertura === 1.5) {
+		return -0.8;
+	} else if (proporcaoAbertura >= 3) {
+		return -0.9;
+	}
+};
+
+const coefPressaoInternaBaixaSuccao = (
+	secao,
+	coeficientes
+) => {
+	return coeficientes[secao];
+};
+
+
+//	Tabela 5 - coeficientes de pressão e de forma, externos, para telhados com duas águas, simétricos,
+//	em edificações de planta retangular
+const tabela5 = [
+
+];
+
+const getCoefsPressaoInternaTelhado = ({
+	angulo,
+	altura,
+	largura
+}) => {
+	let indiceAlturaRelativa,
+			indiceAngulo,
+			indiceSecao;
+
+	if (h/b <= 0.5) indiceAlturaRelativa = 0;
+	else if (h/b > 0.5 && h/b <= 3/2) indiceAlturaRelativa = 1;
+	else if (h/b > 3/2 && h/b <= 6) indiceAlturaRelativa = 2;
+
+};
 
 /**
  *
@@ -643,14 +782,16 @@ const coefPressaoInternaBaixaSuccao = ({
  *
  */
 
-
-
 module.exports = {
   getFatorTopografico: getFatorTopografico,
   getFatorRugosidade: getFatorRugosidade,
   getFatorEstatistico: getFatorEstatistico,
 	determinarFatorRugosidadePorIteracao: determinarFatorRugosidadePorIteracao,
-	getCoeficienteDeFormaParedesPlantaRetangular: getCoeficienteDeFormaParedesPlantaRetangular
+	getCoeficienteDeFormaParedesPlantaRetangular: getCoeficienteDeFormaParedesPlantaRetangular,
+	getCoeficienteDePressaoInterna: getCoeficienteDePressaoInterna,
+	interpolar: interpolar,
+	interpolarCoeficientesDePressaoExterna: interpolarCoeficientesDePressaoExterna,
+	interpolarCoeficientes: interpolarCoeficientes
 };
 
 
