@@ -219,9 +219,9 @@ describe(`Bateria de testes para validar a obtenção dos valores de pressão ex
     let joc = jasmine.objectContaining;
 
     expect(nbr6123.getCoeficienteDeFormaParedesPlantaRetangular({
-      a: 30,
-      b: 20,
-      h: 10
+      comprimento: 30,
+      largura: 20,
+      altura: 10
     })).toEqual(joc({
       ventoAZero: joc({
 				a1: -0.8,
@@ -246,9 +246,9 @@ describe(`Bateria de testes para validar a obtenção dos valores de pressão ex
 		let joc = jasmine.objectContaining;
 
 		expect(nbr6123.getCoeficienteDeFormaParedesPlantaRetangular({
-			a: 60,
-			b: 20,
-			h: 10
+			comprimento: 60,
+			largura: 20,
+			altura: 10
 		})).toEqual(joc({
 			ventoAZero: joc({
 				a1: -0.8,
@@ -273,9 +273,9 @@ describe(`Bateria de testes para validar a obtenção dos valores de pressão ex
 		let joc = jasmine.objectContaining;
 
 		expect(nbr6123.getCoeficienteDeFormaParedesPlantaRetangular({
-			a: 30,
-			b: 20,
-			h: 15
+			comprimento: 30,
+			largura: 20,
+			altura: 15
 		})).toEqual(joc({
 			ventoAZero: joc({
 				a1: -0.9,
@@ -300,9 +300,9 @@ describe(`Bateria de testes para validar a obtenção dos valores de pressão ex
 		let joc = jasmine.objectContaining;
 
 		expect(nbr6123.getCoeficienteDeFormaParedesPlantaRetangular({
-			a: 60,
-			b: 20,
-			h: 15
+			comprimento: 60,
+			largura: 20,
+			altura: 15
 		})).toEqual(joc({
 			ventoAZero: joc({
 				a1: -0.9,
@@ -327,9 +327,9 @@ describe(`Bateria de testes para validar a obtenção dos valores de pressão ex
 		let joc = jasmine.objectContaining;
 
 		expect(nbr6123.getCoeficienteDeFormaParedesPlantaRetangular({
-			a: 30,
-			b: 20,
-			h: 40
+			comprimento: 30,
+			largura: 20,
+			altura: 40
 		})).toEqual(joc({
 			ventoAZero: joc({
 				a1: -1.0,
@@ -354,9 +354,9 @@ describe(`Bateria de testes para validar a obtenção dos valores de pressão ex
 		let joc = jasmine.objectContaining;
 
 		expect(nbr6123.getCoeficienteDeFormaParedesPlantaRetangular({
-			a: 60,
-			b: 20,
-			h: 40
+			comprimento: 60,
+			largura: 20,
+			altura: 40
 		})).toEqual(joc({
 			ventoAZero: joc({
 				a1: -1.0,
@@ -448,7 +448,7 @@ describe(`Bateria de testes para validar a obtenção dos valores de pressão ex
 		let joc = jasmine.objectContaining;
 
 		let coeficientesPressaoExterna = nbr6123.getCoeficienteDeFormaParedesPlantaRetangular({
-			a: 60, b: 20, h: 10
+			comprimento: 60, largura: 20, altura: 10
 		});
 
 		expect(nbr6123.getCoeficienteDePressaoInterna({
@@ -468,7 +468,7 @@ describe(`Bateria de testes para validar a obtenção dos valores de pressão ex
 		let joc = jasmine.objectContaining;
 
 		let coeficientesPressaoExterna = nbr6123.getCoeficienteDeFormaParedesPlantaRetangular({
-			a: 60, b: 20, h: 10
+			comprimento: 60, largura: 20, altura: 10
 		});
 
 		expect(nbr6123.getCoeficienteDePressaoInterna({
@@ -536,9 +536,47 @@ describe(`Bateria de testes para validar a obtenção dos valores de pressão ex
 			}
 		})).toEqual([0.2, -0.3]);
 	});
+});
 
-	it("Deve retornar os indices de pressão interna de uma edificação com as quatro faces igualmente permeáveis", () => {
+describe(`Bateria de testes para validar a obtenção dos coeficientes de pressão
+		externa para telhado a partir da tabela 5`, () => {
+
+	it(`Deve retornar o coeficiente de pressão externa para telhado de um galpão
+			de 10m de altura, 20m de largura e 5° de angulo`, () => {
 		let joc = jasmine.objectContaining;
 
+		expect(nbr6123.getCoefsPressaoExternaTelhado({
+			altura: 10,
+			largura: 20,
+			angulo: 5
+		})).toEqual(joc({
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.4
+			},
+			ventoANoventa: {
+				esquerda: -0.9,
+				direita: -0.4
+			}
+		}));
 	});
+});
+
+describe(`Bateria de testes para validar a obtenção das pressões
+		dinâmicas`,  () => {
+	console.log(nbr6123.calcularPressoesEfetivas({
+		velocidadeBasica: 45,
+		tipoDeRelevo: 0,
+		alturaTalude: 3,
+		alturaDoPonto: 10,
+		inclinacaoTalude: 0,
+		categoria: "II",
+		intervaloTempo: "A",
+		grupo: 2,
+		comprimento: 40,
+		largura: 20,
+		altura: 10,
+		anguloTelhado: 5,
+		tipoPermeabilidade: "quatro faces",
+	}));
 });

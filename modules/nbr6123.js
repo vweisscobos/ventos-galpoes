@@ -136,6 +136,23 @@ const getFatorTopografico = (index, alturaTalude, alturaDoPonto, inclinacaoTalud
   return tiposDeRelevo[index].getFator(alturaTalude, alturaDoPonto, inclinacaoTalude);
 };
 
+const getIndiceTipoDeRelevo = (tipoDeRelevo) => {
+	switch(tipoDeRelevo) {
+		case "Terreno plano ou fracamente acidentado":
+			return 0;
+		case "Vales protegidos":
+			return 1;
+		case "Edificação no pé do morro ou do talude":
+			return 2;
+		case "Edificação após o topo do talude com uma distancia maior ou igual a 4 vezes a altura deste":
+			return 3;
+		case "Edificação sobre o talude":
+			return 4;
+		default:
+			throw new Error("Tipo de terreno inválido: " + tipoDeRelevo);
+	}
+};
+
 /**
  *
  * Fim dos cálculos referentes à seção 5.2 da NBR 6123
@@ -407,11 +424,10 @@ const getCoeficientesDePressaoEForma = ({ a, b, h, nAguas, angVento, angTelhado 
 
 };
 
-const getCoeficienteDeFormaParedesPlantaRetangular = ({a, b, h}) => {
-	let alturaRelativa = h/b,
-			proporcaoEntreDimensoesHorizontais = a/b,
+const getCoeficienteDeFormaParedesPlantaRetangular = ({comprimento, largura, altura}) => {
+	let alturaRelativa = altura/largura,
+			proporcaoEntreDimensoesHorizontais = comprimento/largura,
 			indiceAlturaRelativa,
-			indiceProporcaoDimensoesHorizontais,
 			coeficientesPressaoExterna;
 
 	if (alturaRelativa <= 1/2) {
@@ -626,6 +642,8 @@ const getCoeficienteDePressaoInterna = ({
 				secaoDaAbertura,
 				coefsPressaoExterna
 			);
+		default:
+			throw new Error("Tipo inválido de permeabilidade: " + tipoPermeabilidade);
 	}
 };
 
@@ -758,22 +776,354 @@ const coefPressaoInternaBaixaSuccao = (
 //	Tabela 5 - coeficientes de pressão e de forma, externos, para telhados com duas águas, simétricos,
 //	em edificações de planta retangular
 const tabela5 = [
-
+	[
+		{
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.4
+			},
+			ventoANoventa: {
+				esquerda: -0.8,
+				direita: -0.4
+			}
+		},
+		{
+			//	teta = 5°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.4
+			},
+			ventoANoventa: {
+				esquerda: -0.9,
+				direita: -0.4
+			}
+		},
+		{
+			//	teta = 10°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.6
+			},
+			ventoANoventa: {
+				esquerda: -1.2,
+				direita: -0.4
+			}
+		},
+		{
+			//	teta = 15°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.6
+			},
+			ventoANoventa: {
+				esquerda: -1.0,
+				direita: -0.4
+			}
+		},
+		{
+			//	teta = 20°
+			ventoAZero: {
+				frente: -0.7,
+				tras: -0.6
+			},
+			ventoANoventa: {
+				esquerda: -0.4,
+				direita: -0.4
+			}
+		},
+		{
+			//	teta = 30°
+			ventoAZero: {
+				frente: -0.7,
+				tras: -0.6
+			},
+			ventoANoventa: {
+				esquerda: 0,
+				direita: -0.4
+			}
+		},
+		{
+			//	teta = 45°
+			ventoAZero: {
+				frente: -0.7,
+				tras: -0.6
+			},
+			ventoANoventa: {
+				esquerda: 0.3,
+				direita: -0.5
+			}
+		},
+		{
+			//	teta = 60°
+			ventoAZero: {
+				frente: -0.7,
+				tras: -0.6
+			},
+			ventoANoventa: {
+				esquerda: 0.7,
+				direita: -0.6
+			}
+		}
+	],
+	[
+		{
+			//	teta = 0°
+			ventoAZero: {
+				frente: -1.0,
+				tras: -0.6
+			},
+			ventoANoventa: {
+				esquerda: -0.8,
+				direita: -0.6
+			}
+		},
+		{
+			//	teta = 5°
+			ventoAZero: {
+				frente: -0.9,
+				tras: -0.6
+			},
+			ventoANoventa: {
+				esquerda: -0.9,
+				direita: -0.6
+			}
+		},
+		{
+			//	teta = 10°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.6
+			},
+			ventoANoventa: {
+				esquerda: -1.1,
+				direita: -0.6
+			}
+		},
+		{
+			//	teta = 15°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.6
+			},
+			ventoANoventa: {
+				esquerda: -1.0,
+				direita: -0.6
+			}
+		},
+		{
+			//	teta = 20°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.6
+			},
+			ventoANoventa: {
+				esquerda: -0.7,
+				direita: -0.5
+			}
+		},
+		{
+			//	teta = 30°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.8
+			},
+			ventoANoventa: {
+				esquerda: -0.2,
+				direita: -0.5
+			}
+		},
+		{
+			//	teta = 45°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.8
+			},
+			ventoANoventa: {
+				esquerda: 0.2,
+				direita: -0.5
+			}
+		},
+		{
+			//	teta = 60°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.8
+			},
+			ventoANoventa: {
+				esquerda: 0.6,
+				direita: -0.5
+			}
+		}
+	],
+	[
+		{
+			//	teta = 0°
+			ventoAZero: {
+				frente: -0.9,
+				tras: -0.7
+			},
+			ventoANoventa: {
+				esquerda: -0.8,
+				direita: -0.6
+			}
+		},
+		{
+			//	teta = 5°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.8
+			},
+			ventoANoventa: {
+				esquerda: -0.8,
+				direita: -0.6
+			}
+		},
+		{
+			//	teta = 10°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.8
+			},
+			ventoANoventa: {
+				esquerda: -0.8,
+				direita: -0.6
+			}
+		},
+		{
+			//	teta = 15°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.8
+			},
+			ventoANoventa: {
+				esquerda: -0.8,
+				direita: -0.6
+			}
+		},
+		{
+			//	teta = 20°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.8
+			},
+			ventoANoventa: {
+				esquerda: -0.8,
+				direita: -0.6
+			}
+		},
+		{
+			//	teta = 30°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.7
+			},
+			ventoANoventa: {
+				esquerda: -1.0,
+				direita: -0.5
+			}
+		},
+		{
+			//	teta = 40°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.7
+			},
+			ventoANoventa: {
+				esquerda: -0.2,
+				direita: -0.5
+			}
+		},
+		{
+			//	teta = 50°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.7
+			},
+			ventoANoventa: {
+				esquerda: 0.2,
+				direita: -0.5
+			}
+		},
+		{
+			//	teta = 60°
+			ventoAZero: {
+				frente: -0.8,
+				tras: -0.7
+			},
+			ventoANoventa: {
+				esquerda: 0.2,
+				direita: -0.5
+			}
+		}
+	]
 ];
 
-const getCoefsPressaoInternaTelhado = ({
+const getCoefsPressaoExternaTelhado = ({
 	angulo,
 	altura,
 	largura
 }) => {
-	let indiceAlturaRelativa,
-			indiceAngulo,
-			indiceSecao;
+	let indiceAlturaRelativa;
 
-	if (h/b <= 0.5) indiceAlturaRelativa = 0;
-	else if (h/b > 0.5 && h/b <= 3/2) indiceAlturaRelativa = 1;
-	else if (h/b > 3/2 && h/b <= 6) indiceAlturaRelativa = 2;
+	if (altura/largura <= 0.5) indiceAlturaRelativa = 0;
+	else if (altura/largura > 0.5 && altura/largura <= 3/2) indiceAlturaRelativa = 1;
+	else if (altura/largura > 3/2 && altura/largura <= 6) indiceAlturaRelativa = 2;
+	else {
+		throw new Error('Altura fora da faixa aceitável: ' + altura);
+	}
 
+	return tabela5[indiceAlturaRelativa][getIndiceAngulo(indiceAlturaRelativa, angulo)];
+};
+
+const getIndiceAngulo = (
+	indiceAlturaRelativa,
+	angulo
+) => {
+	if (indiceAlturaRelativa === 0 || indiceAlturaRelativa === 1) {
+		switch(angulo) {
+			case 0:
+				return 0;
+			case 5:
+				return 1;
+			case 10:
+				return 2;
+			case 15:
+				return 3;
+			case 20:
+				return 4;
+			case 30:
+				return 5;
+			case 45:
+				return 6;
+			case 60:
+				return 7;
+			default:
+				throw new Error('angulo inválido: ' + angulo);
+		}
+	} else if (indiceAlturaRelativa === 2) {
+		switch(angulo) {
+			case 0:
+				return 0;
+			case 5:
+				return 1;
+			case 10:
+				return 2;
+			case 15:
+				return 3;
+			case 20:
+				return 4;
+			case 30:
+				return 5;
+			case 40:
+				return 6;
+			case 50:
+				return 7;
+			case 60:
+				return 8;
+			default:
+				throw new Error('angulo inválido: ' + angulo);
+		}
+	}
 };
 
 /**
@@ -781,6 +1131,58 @@ const getCoefsPressaoInternaTelhado = ({
  * fim dos cálculos referentes a seção 6. da NBR6123.
  *
  */
+
+const calcularPressoesEfetivas = ({
+	velocidadeBasica,
+	tipoDeRelevo,
+	alturaTalude,
+	alturaDoPonto,
+	inclinacaoTalude,
+	categoria,
+	intervaloTempo,
+	grupo,
+	comprimento,
+	largura,
+	altura,
+	anguloTelhado,
+	tipoPermeabilidade,
+	areaAberturaDominante,
+	areaOutrasAberturas,
+	secaoDaAbertura
+}) => {
+	let s1 = getFatorTopografico(tipoDeRelevo, alturaTalude, alturaDoPonto, inclinacaoTalude);
+	let s2 = getFatorRugosidade(categoria, intervaloTempo, alturaDoPonto);
+	let s3 = getFatorEstatistico(grupo);
+
+	let coeficientesPressaoExternaParede = getCoeficienteDeFormaParedesPlantaRetangular({
+		comprimento: comprimento,
+		largura: largura,
+		altura: altura
+	});
+
+	let coeficientesPressaoExternaTelhado = getCoefsPressaoExternaTelhado({
+		angulo: anguloTelhado,
+		altura: altura,
+		largura: largura
+	});
+
+	let coeficientesDePressaoInterna = getCoeficienteDePressaoInterna({
+		tipoPermeabilidade: tipoPermeabilidade,
+		areaAberturaDominante: areaAberturaDominante,
+		areaOutrasAberturas: areaOutrasAberturas,
+		secaoDaAbertura: secaoDaAbertura,
+		coefsPressaoExterna: coeficientesPressaoExternaParede
+	});
+
+	console.log(
+		s1,
+		s2,
+		s3,
+		coeficientesPressaoExternaParede,
+		coeficientesPressaoExternaTelhado,
+		coeficientesDePressaoInterna
+	);
+};
 
 module.exports = {
   getFatorTopografico: getFatorTopografico,
@@ -790,8 +1192,9 @@ module.exports = {
 	getCoeficienteDeFormaParedesPlantaRetangular: getCoeficienteDeFormaParedesPlantaRetangular,
 	getCoeficienteDePressaoInterna: getCoeficienteDePressaoInterna,
 	interpolar: interpolar,
-	interpolarCoeficientesDePressaoExterna: interpolarCoeficientesDePressaoExterna,
-	interpolarCoeficientes: interpolarCoeficientes
+	interpolarCoeficientes: interpolarCoeficientes,
+	getCoefsPressaoExternaTelhado: getCoefsPressaoExternaTelhado,
+	calcularPressoesEfetivas: calcularPressoesEfetivas
 };
 
 
