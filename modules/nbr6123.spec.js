@@ -468,7 +468,9 @@ describe(`Bateria de testes para validar a obtenção dos valores de pressão ex
 		let joc = jasmine.objectContaining;
 
 		let coeficientesPressaoExterna = nbr6123.getCoeficienteDeFormaParedesPlantaRetangular({
-			comprimento: 60, largura: 20, altura: 10
+			comprimento: 60,
+			largura: 20,
+			altura: 10
 		});
 
 		expect(nbr6123.getCoeficienteDePressaoInterna({
@@ -514,7 +516,7 @@ describe(`Bateria de testes para validar a obtenção dos valores de pressão ex
 		let joc = jasmine.objectContaining;
 
 		expect(nbr6123.getCoeficienteDePressaoInterna({
-			tipoPermeabilidade: "faces opostas",
+			tipoPermeabilidade: "faces opostas frente permeável",
 			secaoDaAbertura: 'c1',
 			coefsPressaoExterna: {
 				ventoAZero: {
@@ -534,7 +536,7 @@ describe(`Bateria de testes para validar a obtenção dos valores de pressão ex
 					d2: -0.6
 				}
 			}
-		})).toEqual([0.2, -0.3]);
+		})).toEqual({ 'ventoANoventa': -0.3, "ventoAZero": 0.2 });
 	});
 });
 
@@ -562,21 +564,27 @@ describe(`Bateria de testes para validar a obtenção dos coeficientes de press�
 	});
 });
 
-describe(`Bateria de testes para validar a obtenção das pressões
-		dinâmicas`,  () => {
-	console.log(nbr6123.calcularPressoesEfetivas({
-		velocidadeBasica: 45,
-		tipoDeRelevo: 0,
-		alturaTalude: 3,
-		alturaDoPonto: 10,
-		inclinacaoTalude: 0,
-		categoria: "II",
-		intervaloTempo: "A",
-		grupo: 2,
-		comprimento: 40,
-		largura: 20,
-		altura: 10,
-		anguloTelhado: 5,
-		tipoPermeabilidade: "quatro faces",
+describe(`Bateria de testes para validar a obtenção das pressões efetivas`,  () => {
+  let coeficientesDePressao = nbr6123.pegarCoeficientesDePressao({
+    velocidadeBasica: 45,
+    tipoDeRelevo: 0,
+    alturaTalude: 3,
+    alturaDoPonto: 10,
+    inclinacaoTalude: 0,
+    categoria: "II",
+    intervaloTempo: "A",
+    grupo: 2,
+    comprimento: 40,
+    largura: 20,
+    altura: 10,
+    anguloTelhado: 5,
+    tipoPermeabilidade: "faces opostas frente permeável"
+  });
+  
+  console.log(nbr6123.getCoeficientesEfetivosDePressao({
+		tipoPermeabilidade: "faces opostas frente permeável",
+		coefPressaoExternaParede: coeficientesDePressao.coefPressaoExternaParedes,
+		coefPressaoExternaTelhado: coeficientesDePressao.coefPressaoExternaTelhado,
+		coefPressaoInterna: coeficientesDePressao.coefPressaoInterna
 	}));
 });

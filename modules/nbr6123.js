@@ -631,8 +631,16 @@ const getCoeficienteDePressaoInterna = ({
 	coefsPressaoExterna
 }) => {
 	switch(tipoPermeabilidade) {
-		case "faces opostas":
-			return [0.2, -0.3];
+		case "faces opostas frente permeável":
+			return {
+				ventoAZero: 0.2,
+				ventoANoventa: -0.3
+			};
+    case "faces opostas lateral permeável":
+      return {
+      	ventoANoventa: 0.2,
+				ventoAZero: -0.3
+      };
 		case "quatro faces":
 			return [0, -0.3];
 		case "abertura dominante":
@@ -1132,7 +1140,7 @@ const getIndiceAngulo = (
  *
  */
 
-const calcularPressoesEfetivas = ({
+const pegarCoeficientesDePressao = ({
 	velocidadeBasica,
 	tipoDeRelevo,
 	alturaTalude,
@@ -1150,9 +1158,27 @@ const calcularPressoesEfetivas = ({
 	areaOutrasAberturas,
 	secaoDaAbertura
 }) => {
-	let s1 = getFatorTopografico(tipoDeRelevo, alturaTalude, alturaDoPonto, inclinacaoTalude);
-	let s2 = getFatorRugosidade(categoria, intervaloTempo, alturaDoPonto);
+	let s1 = getFatorTopografico(
+		tipoDeRelevo,
+		alturaTalude,
+		alturaDoPonto,
+		inclinacaoTalude
+	);
+	let s2 = getFatorRugosidade(
+		categoria,
+		intervaloTempo,
+		alturaDoPonto
+	);
 	let s3 = getFatorEstatistico(grupo);
+
+	let velocidadeCatacteristica = getVelocidadeCaracteristica({
+		velocidadeBasica: velocidadeBasica,
+		fatorTopografico: s1,
+		fatorRugosidade: s2,
+		fatorEstatistico: s3
+	});
+
+	let pressaoDinamica = getPressaoDinamica(velocidadeCatacteristica);
 
 	let coeficientesPressaoExternaParede = getCoeficienteDeFormaParedesPlantaRetangular({
 		comprimento: comprimento,
@@ -1174,14 +1200,36 @@ const calcularPressoesEfetivas = ({
 		coefsPressaoExterna: coeficientesPressaoExternaParede
 	});
 
-	console.log(
-		s1,
-		s2,
-		s3,
-		coeficientesPressaoExternaParede,
-		coeficientesPressaoExternaTelhado,
-		coeficientesDePressaoInterna
-	);
+	return {
+		pressaoDinamica: pressaoDinamica/1000,
+		coefPressaoExternaParedes: coeficientesPressaoExternaParede,
+		coefPressaoExternaTelhado: coeficientesPressaoExternaTelhado,
+		coefPressaoInterna: coeficientesDePressaoInterna
+	}
+};
+
+const getCoeficientesEfetivosDePressao = ({
+	tipoPermeabilidade,
+	coefPressaoExternaParede,
+	coefPressaoExternaTelhado,
+	coefPressaoInterna
+}) => {
+	if (tipoPermeabilidade === 'abertura dominante' || new RegExp(/faces opostas/).test(tipoPermeabilidade)) {
+		return {
+			ventoAZero: {
+				paredeEsquerda: coefPressaoExternaParede.ventoAZero['a1'] - coefPressaoInterna.ventoAZero,
+				paredeDireita: coefPressaoExternaParede.ventoAZero['b1'] - coefPressaoInterna.ventoAZero,
+				telhadoEsquerdo: coefPressaoExternaTelhado.ventoAZero.frente - coefPressaoInterna.ventoAZero,
+        telhadoDireito: coefPressaoExternaTelhado.ventoAZero.frente - coefPressaoInterna.ventoAZero
+      },
+			ventoANoventa: {
+				paredeEsquerda: coefPressaoExternaParede.ventoANoventa['a'] - coefPressaoInterna.ventoANoventa,
+				paredeDireita: coefPressaoExternaParede.ventoANoventa['b'] - coefPressaoInterna.ventoANoventa,
+				telhadoEsquerdo: coefPressaoExternaTelhado.ventoANoventa.esquerda - coefPressaoInterna.ventoANoventa,
+				telhadoDireito: coefPressaoExternaTelhado.ventoANoventa.direita - coefPressaoInterna.ventoANoventa
+			}
+		}
+	}
 };
 
 module.exports = {
@@ -1194,7 +1242,8 @@ module.exports = {
 	interpolar: interpolar,
 	interpolarCoeficientes: interpolarCoeficientes,
 	getCoefsPressaoExternaTelhado: getCoefsPressaoExternaTelhado,
-	calcularPressoesEfetivas: calcularPressoesEfetivas
+	pegarCoeficientesDePressao: pegarCoeficientesDePressao,
+	getCoeficientesEfetivosDePressao: getCoeficientesEfetivosDePressao
 };
 
 
