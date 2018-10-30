@@ -1230,6 +1230,41 @@ const getCoeficientesEfetivosDePressao = ({
 			}
 		}
 	}
+
+	if (tipoPermeabilidade === 'quatro faces') {
+		return [
+      {
+      	coeficientePressaoInterna: 0,
+				ventoAZero: {
+					paredeEsquerda: coefPressaoExternaParede.ventoAZero['a1'],
+					paredeDireita: coefPressaoExternaParede.ventoAZero['b1'],
+					telhadoEsquerdo: coefPressaoExternaTelhado.ventoAZero.frente,
+					telhadoDireito: coefPressaoExternaTelhado.ventoAZero.frente
+      },
+				ventoANoventa: {
+					paredeEsquerda: coefPressaoExternaParede.ventoANoventa['a'],
+					paredeDireita: coefPressaoExternaParede.ventoANoventa['b'],
+					telhadoEsquerdo: coefPressaoExternaTelhado.ventoANoventa.esquerda,
+					telhadoDireito: coefPressaoExternaTelhado.ventoANoventa.direita
+      }
+    },
+    {
+      coeficientePressaoInterna: -0.3,
+      ventoAZero: {
+        paredeEsquerda: coefPressaoExternaParede.ventoAZero['a1'] - (-0.3),
+        paredeDireita: coefPressaoExternaParede.ventoAZero['b1'] - (-0.3),
+        telhadoEsquerdo: coefPressaoExternaTelhado.ventoAZero.frente - (-0.3),
+        telhadoDireito: coefPressaoExternaTelhado.ventoAZero.frente - (-0.3)
+      },
+      ventoANoventa: {
+        paredeEsquerda: coefPressaoExternaParede.ventoANoventa['a'] - (-0.3),
+        paredeDireita: coefPressaoExternaParede.ventoANoventa['b'] - (-0.3),
+        telhadoEsquerdo: coefPressaoExternaTelhado.ventoANoventa.esquerda - (-0.3),
+        telhadoDireito: coefPressaoExternaTelhado.ventoANoventa.direita - (-0.3)
+      }
+    }
+		];
+	}
 };
 
 module.exports = {

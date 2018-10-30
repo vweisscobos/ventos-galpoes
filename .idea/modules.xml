@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/api-ventos.iml" filepath="$PROJECT_DIR$/.idea/api-ventos.iml" />
       <module fileurl="file://$PROJECT_DIR$/../api_ventos/.idea/api_ventos.iml" filepath="$PROJECT_DIR$/../api_ventos/.idea/api_ventos.iml" />
     </modules>
   </component>

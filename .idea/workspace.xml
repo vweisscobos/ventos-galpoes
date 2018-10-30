@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e800d454-93ff-4012-ab55-46077df326b9" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/routes/nbr6123.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/nbr6123.js" beforeDir="false" afterPath="$PROJECT_DIR$/modules/nbr6123.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/nbr6123.spec.js" beforeDir="false" afterPath="$PROJECT_DIR$/modules/nbr6123.spec.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/../untitled1/.tmp/" />
     <ignored path="$PROJECT_DIR$/../untitled1/temp/" />
@@ -60,32 +62,44 @@
     <session id="-2083807670">
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="js" value="1712" />
+          <entry key="js" value="2150" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JavaScript" value="1712" />
+          <entry key="JavaScript" value="2150" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
-          <entry key="project.open.time.1" value="1" />
-          <entry key="project.opened" value="1" />
+          <entry key="project.closed" value="3" />
+          <entry key="project.open.time.1" value="2" />
+          <entry key="project.open.time.6" value="1" />
+          <entry key="project.open.time.8" value="1" />
+          <entry key="project.opened" value="4" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="js" value="5" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="JavaScript" value="5" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.3833828">
+    <splitter split-orientation="horizontal" split-proportion="0.431454">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/modules/nbr6123.spec.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="501">
-                  <caret line="588" column="6" lean-forward="true" selection-start-line="588" selection-start-column="6" selection-end-line="588" selection-end-column="6" />
+                <state relative-caret-position="515">
+                  <caret line="588" column="75" lean-forward="true" selection-start-line="588" selection-start-column="75" selection-end-line="588" selection-end-column="75" />
                 </state>
               </provider>
             </entry>
@@ -95,10 +109,42 @@
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/routes/nbr6123.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="119">
+                  <caret line="7" column="2" lean-forward="true" selection-start-line="7" selection-start-column="2" selection-end-line="7" selection-end-column="2" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/modules/nbr6123.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="297">
-                  <caret line="1226" column="59" lean-forward="true" selection-start-line="1226" selection-start-column="59" selection-end-line="1226" selection-end-column="59" />
+                <state relative-caret-position="306">
+                  <caret line="1251" column="38" lean-forward="true" selection-start-line="1251" selection-start-column="38" selection-end-line="1251" selection-end-column="38" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/routes/isopletas.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="510">
+                  <caret line="51" column="7" lean-forward="true" selection-start-line="51" selection-start-column="7" selection-end-line="51" selection-end-column="7" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/models/velocidade-basica.js">
+              <provider selected="true" editor-type-id="text-editor" />
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/app.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="7">
+                  <caret line="14" column="47" selection-start-line="14" selection-start-column="47" selection-end-line="14" selection-end-column="47" />
                 </state>
               </provider>
             </entry>
@@ -117,6 +163,7 @@
       <find>getCoeficienteDePressao</find>
       <find>abertura</find>
       <find>faces opostas</find>
+      <find>pegarc</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -127,11 +174,12 @@
       <list>
         <option value="$PROJECT_DIR$/modules/geodesic.js" />
         <option value="$PROJECT_DIR$/modules/geometry.js" />
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/routes/isopletas.js" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/modules/nbr6123" />
         <option value="$PROJECT_DIR$/modules/nbr6123.js" />
+        <option value="$PROJECT_DIR$/routes/nbr6123.js" />
+        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/modules/nbr6123.spec.js" />
       </list>
     </option>
@@ -147,10 +195,15 @@
   <component name="NodeModulesDirectoryManager">
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths>
+      <path value="$PROJECT_DIR$/package.json" />
+    </packageJsonPaths>
+  </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="-2" />
-    <option name="width" value="1920" />
-    <option name="height" value="1082" />
+    <option name="x" value="-9" />
+    <option name="width" value="1400" />
+    <option name="height" value="1000" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -162,22 +215,17 @@
         <subPane>
           <expand>
             <path>
-              <item name="api_ventos" type="b2602c69:ProjectViewProjectNode" />
-              <item name="api_ventos" type="462c0819:PsiDirectoryNode" />
+              <item name="api-ventos" type="b2602c69:ProjectViewProjectNode" />
+              <item name="api-ventos" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="api_ventos" type="b2602c69:ProjectViewProjectNode" />
-              <item name="api_ventos" type="462c0819:PsiDirectoryNode" />
+              <item name="api-ventos" type="b2602c69:ProjectViewProjectNode" />
+              <item name="api-ventos" type="462c0819:PsiDirectoryNode" />
               <item name="modules" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="api_ventos" type="b2602c69:ProjectViewProjectNode" />
-              <item name="api_ventos" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="api_ventos" type="b2602c69:ProjectViewProjectNode" />
-              <item name="api_ventos" type="462c0819:PsiDirectoryNode" />
+              <item name="api-ventos" type="b2602c69:ProjectViewProjectNode" />
+              <item name="api-ventos" type="462c0819:PsiDirectoryNode" />
               <item name="routes" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -247,12 +295,15 @@
       <workItem from="1539305179314" duration="7478000" />
       <workItem from="1539369174890" duration="10739000" />
       <workItem from="1539643590237" duration="7346000" />
-      <workItem from="1540407814743" duration="3113000" />
+      <workItem from="1540407814743" duration="3177000" />
+      <workItem from="1540462794954" duration="2022000" />
+      <workItem from="1540484707110" duration="599000" />
+      <workItem from="1540898965531" duration="11430000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="113663000" />
+    <option name="totallyTimeSpent" value="127778000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -269,8 +320,8 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.74657536" visible="true" weight="0.26030368" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.25342464" side_tool="true" weight="0.44034708" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.74499476" visible="true" weight="0.20824295" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.25500527" side_tool="true" visible="true" weight="0.20824295" />
       <window_info anchor="bottom" id="Version Control" order="10" show_stripe_button="false" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -292,24 +343,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/isopletas.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="935">
-          <caret line="55" selection-start-line="55" selection-end-line="55" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="29" selection-start-line="24" selection-start-column="29" selection-end-line="24" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -322,15 +359,39 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/nbr6123.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="1226" column="59" lean-forward="true" selection-start-line="1226" selection-start-column="59" selection-end-line="1226" selection-end-column="59" />
+        <state relative-caret-position="306">
+          <caret line="1251" column="38" lean-forward="true" selection-start-line="1251" selection-start-column="38" selection-end-line="1251" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7">
+          <caret line="14" column="47" selection-start-line="14" selection-start-column="47" selection-end-line="14" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/velocidade-basica.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/isopletas.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="51" column="7" lean-forward="true" selection-start-line="51" selection-start-column="7" selection-end-line="51" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/nbr6123.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="2" lean-forward="true" selection-start-line="7" selection-start-column="2" selection-end-line="7" selection-end-column="2" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/nbr6123.spec.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="501">
-          <caret line="588" column="6" lean-forward="true" selection-start-line="588" selection-start-column="6" selection-end-line="588" selection-end-column="6" />
+        <state relative-caret-position="515">
+          <caret line="588" column="75" lean-forward="true" selection-start-line="588" selection-start-column="75" selection-end-line="588" selection-end-column="75" />
         </state>
       </provider>
     </entry>

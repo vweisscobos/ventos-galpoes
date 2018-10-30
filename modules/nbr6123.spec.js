@@ -580,6 +580,8 @@ describe(`Bateria de testes para validar a obtenção das pressões efetivas`,  
     anguloTelhado: 5,
     tipoPermeabilidade: "faces opostas frente permeável"
   });
+
+  console.log(coeficientesDePressao);
   
   console.log(nbr6123.getCoeficientesEfetivosDePressao({
 		tipoPermeabilidade: "faces opostas frente permeável",
