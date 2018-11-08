@@ -1,39 +1,11 @@
 const Geometry = require('./geometry');
 
-// const categorias = [
-//   [1, 'Mar calmo, lagos, rios, pântanos'],
-//   [2, 'Zonas costeiras planas, campos de aviação, pântanos com vegetação rala, pradarias e charnecas, fazendas sem sebes ou muro.'],
-//   [3, 'Granjas e casas de campo, fazendas com sebes e/ou muros, subúrbios com casas baixas e esparsas com obstáculos de até 3,0m'],
-//   [4, 'Parques e bosques com muitas árvores, cidades pequenas, subúrbios densamente construídos, áreas industriais plena ou parcialmente desenvolvidas com obstáculos de cota média de 10,0m'],
-//   [5, 'Florestas com árvores altas, centros de grandes cidades, com cotas de topo média igual ou superior a 25,0,']
-// ];
-//
-// const classes = [
-//   ['A', 'Toda edificação na qual a maior dimensão horizontal ou vertical não exceda os 20m.'],
-//   ['B', 'Toda edificação na qual a maior dimensão horizonal ou vertical da superfície frontal esteja entre 20m e 50m.'],
-//   ['C', 'Toda edificação na qual a maior dimensão horizontal ou vertical da superfície frontal não exceda 50m.']
-// ];
-//
-// const grausDeSeguranca = [
-//   [1, "Edificações cuja ruína total ou parcial pode afetar a segurança ou possibilidade de socorro a pessoas após uma tempestade destrutiva (hospitais, quartéis de bombeiros, centrais de comunicação, etc.)"],
-//   [2, "Edificações para hotéis e residências. Edificações para comércio e indústria com alto fator de ocupação."],
-//   [3, "Edificações e instalações industriais com baixo fator de ocupação (depósitos, silos, construções rurais, ect.)"],
-//   [4, "Vedações (telhados, vidros, painéis de vedação, etc)"],
-//   [5, "Edificações temporárias. Estruturas dos grupos 1 e 3 durante a construção"]
-// ];
-
-
-
 /**
  *
  * Início dos cálculos referentes à seção 4.2 da NBR 6123, que diz respeito à determinação das forças estáticas
  * devido ao vento
  *
  */
-const getVelocidadeBasica = (lng, lat) => {
-
-};
-
 const getVelocidadeCaracteristica = ({velocidadeBasica, fatorTopografico, fatorRugosidade, fatorEstatistico}) => {
 	return velocidadeBasica * fatorTopografico * fatorRugosidade * fatorEstatistico;
 };
@@ -49,60 +21,56 @@ const getPressaoDinamica = (velocidadeCaracteristica) => {
  */
 
 
-
-
 /**
  *
  * Início dos cálculos referentes à seção 5.2 da NBR 6123, que diz respeito à obtenção do fator topográfico
  *
  */
-const tiposDeRelevo = [
-  {
-    //  0
-    descricao: "Terreno plano ou fracamente acidentado",
-    getFator() {
+const getFatorTopografico = ( topografia, dimensoes ) => {
+	if (topografia["tipo"]) return calcularFatorTopografico(topografia, dimensoes.altura);
+
+	switch(topografia) {
+    // Terreno plano ou fracamente acidentado
+    case 0:
       return 1;
-    }
-  },
-  {
-    //  1
-    descricao: "Vales protegidos",
-    getFator() {
+    // Vales protegidos
+    case 1:
       return 0.9;
-    }
-  },
-  {
-    //  2
-    descricao: "Edificação no pé do morro ou do talude",
-    getFator() {
-      return 1;
-    }
-  },
-  {
-    //  3
-    descricao: "Edificação após o topo do talude com uma distancia maior ou igual a 4 vezes a altura deste",
-    getFator() {
-      return 1;
-    }
-  },
-  {
-    //  4
-    descricao: "Edificação sobre o talude",
-    getFator(alturaTalude, alturaDoPonto, inclinacaoTalude) {
-      if (inclinacaoTalude <= 3) {
-        return 1;
-      } else if (inclinacaoTalude > 3 && inclinacaoTalude < 6) {
-        return s1AnguloEntreTresESeis(alturaTalude, alturaDoPonto, inclinacaoTalude);
-      } else if (inclinacaoTalude >= 6 && inclinacaoTalude <= 17) {
-        return s1AnguloEntreSeisEDezessete(alturaTalude, alturaDoPonto, inclinacaoTalude);
-      } else if (inclinacaoTalude > 17 && inclinacaoTalude < 45) {
-        return s1AnguloEntreDezesseteEQuarentaECinco(alturaTalude, alturaDoPonto, inclinacaoTalude);
-      } else if (inclinacaoTalude >= 45) {
-        return s1AnguloMaiorIgualAQuarentaECinco(alturaTalude, alturaDoPonto);
-      }
-    }
   }
-];
+};
+
+const calcularFatorTopografico = ({tipo, altura, inclinacao, posicaoLocacao}, alturaPonto) => {
+  let distHorizontalTopo = altura / Math.tan(Geometry.degreesToRadians(inclinacao));
+  let fatorDoTopo = calcularFatorTopograficoTopo(altura, alturaPonto, inclinacao);
+
+  switch(tipo) {
+    case "morro":
+      if (posicaoLocacao <= 0 || posicaoLocacao >= distHorizontalTopo*2) return 1;
+      else if (posicaoLocacao === distHorizontalTopo) return fatorDoTopo;
+      else return interpolar(0, 1, distHorizontalTopo, fatorDoTopo, posicaoLocacao);
+    case "talude":
+      if (posicaoLocacao <= 0 || posicaoLocacao >= (distHorizontalTopo + altura * 4)) return 1;
+      else if (posicaoLocacao === distHorizontalTopo) return fatorDoTopo;
+      else if (posicaoLocacao > 0 && posicaoLocacao < distHorizontalTopo )
+          return interpolar(0, 1, distHorizontalTopo, fatorDoTopo, posicaoLocacao);
+      else if (posicaoLocacao > distHorizontalTopo && posicaoLocacao < (distHorizontalTopo + altura * 4))
+          return interpolar(distHorizontalTopo, fatorDoTopo, (distHorizontalTopo + altura * 4), 1, posicaoLocacao);
+  }
+};
+
+const calcularFatorTopograficoTopo = (altura, alturaPonto, inclinacao) => {
+  if (inclinacao <= 3) {
+    return 1;
+  } else if (inclinacao > 3 && inclinacao < 6) {
+    return s1AnguloEntreTresESeis(altura, alturaPonto, inclinacao);
+  } else if (inclinacao >= 6 && inclinacao <= 17) {
+    return s1AnguloEntreSeisEDezessete(altura, alturaPonto, inclinacao);
+  } else if (inclinacao > 17 && inclinacao < 45) {
+    return s1AnguloEntreDezesseteEQuarentaECinco(altura, alturaPonto, inclinacao);
+  } else if (inclinacao >= 45) {
+    return s1AnguloMaiorIgualAQuarentaECinco(altura, alturaPonto);
+  }
+};
 
 const s1AnguloEntreTresESeis = (alturaTalude, alturaDoPonto, inclinacaoTalude) => {
   let delta = s1AnguloEntreSeisEDezessete(alturaTalude, alturaDoPonto, 6) - 1;
@@ -132,27 +100,6 @@ const s1AnguloMaiorIgualAQuarentaECinco = (alturaTalude, alturaDoPonto) => {
   return s1 >= 1 ? s1 : 1;
 };
 
-const getFatorTopografico = (index, alturaTalude, alturaDoPonto, inclinacaoTalude) => {
-  return tiposDeRelevo[index].getFator(alturaTalude, alturaDoPonto, inclinacaoTalude);
-};
-
-const getIndiceTipoDeRelevo = (tipoDeRelevo) => {
-	switch(tipoDeRelevo) {
-		case "Terreno plano ou fracamente acidentado":
-			return 0;
-		case "Vales protegidos":
-			return 1;
-		case "Edificação no pé do morro ou do talude":
-			return 2;
-		case "Edificação após o topo do talude com uma distancia maior ou igual a 4 vezes a altura deste":
-			return 3;
-		case "Edificação sobre o talude":
-			return 4;
-		default:
-			throw new Error("Tipo de terreno inválido: " + tipoDeRelevo);
-	}
-};
-
 /**
  *
  * Fim dos cálculos referentes à seção 5.2 da NBR 6123
@@ -168,7 +115,33 @@ const getIndiceTipoDeRelevo = (tipoDeRelevo) => {
  *
  */
 
-const parametrosMeteorologicos = [
+const getFatorRugosidade = ({ rugosidade, classeDimensoes, topografia, dimensoes, velocidadeBasica }) => {
+  if (classeDimensoes > 2) return determinarFatorRugosidadePorIteracao({
+    rugosidade: rugosidade,
+    intervaloTempoEstimado: 15,
+    topografia: topografia,
+    dimensoes: dimensoes,
+    velocidadeBasica: velocidadeBasica
+  });
+
+  else return calcularFatorRugosidade(rugosidade, classeDimensoes, dimensoes.altura);
+};
+
+const calcularFatorRugosidade = (rugosidade, classeDimensoes, alturaDoPonto) => {
+  let parametrosMeteorologicos = getParametrosMeteorologicos(rugosidade, classeDimensoes);
+  let fatorDeRajada = FATORES_DE_RAJADA[classeDimensoes];
+
+  return parametrosMeteorologicos.b * fatorDeRajada * ((alturaDoPonto/10) ** parametrosMeteorologicos.p);
+};
+
+const getParametrosMeteorologicos = (rugosidade, classeDimensoes) => {
+  return {
+    p: PARAMETROS_METEOROLOGICOS[rugosidade]['parametros']['p'][classeDimensoes],
+    b: PARAMETROS_METEOROLOGICOS[rugosidade]['parametros']['b'][classeDimensoes]
+  };
+};
+
+const PARAMETROS_METEOROLOGICOS = [
   {
     parametros: {
       b: [1.1, 1.11, 1.12, 1.13, 1.14, 1.15, 1.16, 1.17, 1.19, 1.21, 1.23, 1.25],
@@ -201,105 +174,82 @@ const parametrosMeteorologicos = [
   }
 ];
 
-const getParametrosMeteorologicos = (categoria, intervaloTempo) => {
-  let indiceCategoria = getIndiceCategoria(categoria);
-  let indiceClasse = getIndiceParametrosMeteorologicos(intervaloTempo);
-
-  return {
-		p: parametrosMeteorologicos[indiceCategoria]['parametros']['p'][indiceClasse],
-		b: parametrosMeteorologicos[indiceCategoria]['parametros']['b'][indiceClasse]
-	};
+const FATORES_DE_RAJADA ={
+  "A": 1.00,
+  "B": 1.00,
+  "C": 0.98,
+  3: 1.00,
+  5: 0.98,
+  10: 0.95,
+  15: 0.93,
+  20: 0.90,
+  30: 0.87,
+  45: 0.84,
+  60: 0.82,
+  120: 0.77,
+  300: 0.72,
+  600: 0.69,
+  3600: 0.65
 };
 
-const getIndiceParametrosMeteorologicos = (intervalo) => {
-	switch(intervalo) {
-		case "A":
-			return 0;
-		case 3:
-			return 0;
-		case "B":
-			return 1;
-		case 5:
-			return 1;
-		case "C":
-			return 2;
-		case 10:
-			return 2;
-		case 15:
-			return 3;
-		case 20:
-			return 4;
-		case 30:
-			return 5;
-		case 45:
-			return 6;
-		case 60:
-			return 7;
-		case 120:
-			return 8;
-		case 300:
-			return 9;
-		case 600:
-			return 10;
-		case 3600:
-			return 11;
-		default:
-			throw new Error('Classe inválida: ' + classe);
-	}
-};
+const determinarFatorRugosidadePorIteracao = ({
+  rugosidade,
+  intervaloTempoEstimado,
+  dimensoes,
+  topografia,
+  velocidadeBasica
+}) => {
+  let fatorTopografico,
+    fatorRugosidade,
+    velocidadeMedia,
+    intervaloDeTempoCalculado,
+    maiorDimensao,
+    iteracoes = [];
 
-const getIndiceCategoria = (categoria) => {
-  switch(categoria) {
-    case "I":
-      return 0;
-    case "II":
-      return 1;
-    case "III":
-      return 2;
-		case "IV":
-      return 3;
-    case "V":
-      return 4;
-    default:
-      throw new Error('Categoria inválida: ' + categoria);
+  fatorTopografico =  getFatorTopografico(topografia, dimensoes);
+
+  maiorDimensao = determinaMaiorDimensao(dimensoes);
+
+  while (!compararIteracoes(iteracoes)) {
+    fatorRugosidade = calcularFatorRugosidade(rugosidade, intervaloTempoEstimado, dimensoes.altura);
+    velocidadeMedia = getVelocidadeMediaVento(fatorTopografico, fatorRugosidade, velocidadeBasica);
+    intervaloDeTempoCalculado = getIntervaloTempo(maiorDimensao, velocidadeMedia);
+
+    intervaloTempoEstimado = pegarProximoIntervaloDeTempo(intervaloTempoEstimado, intervaloDeTempoCalculado);
+
+    iteracoes.push([intervaloTempoEstimado, intervaloDeTempoCalculado]);
   }
+
+  return fatorRugosidade;
 };
 
-const getFatorDeRajada = (classe) => {
-  switch(classe) {
-    case "A":
-			return 1.00;
-    case 3:
-      return 1.00;
-    case "B":
-			return 0.98;
-    case 5:
-      return 0.98;
-    case "C":
-			return 0.95;
-    case 10:
-      return 0.95;
-		case 15:
-			return 0.93;
-		case 20:
-			return 0.90;
-		case 30:
-			return 0.87;
-		case 45:
-			return 0.84;
-		case 60:
-			return 0.82;
-		case 120:
-			return 0.77;
-		case 300:
-			return 0.72;
-		case 600:
-			return 0.69;
-		case 3600:
-			return 0.65;
-    default:
-      throw new Error('Classe inválida: ' + classe);
-  }
+const determinaMaiorDimensao = ({ altura, largura, profundidade}) => {
+  let maiorDimensao;
+
+  maiorDimensao = altura >= largura ? altura : largura;
+  maiorDimensao = maiorDimensao >= profundidade ? maiorDimensao : profundidade;
+
+  return maiorDimensao;
+};
+
+const compararIteracoes = (iteracoes) => {
+  if (iteracoes.length < 4) return false;
+
+  let ultimasQuatro = iteracoes.slice(-4);
+
+  if (ultimasQuatro[0][0] === ultimasQuatro[2][0] && ultimasQuatro[1][0] === ultimasQuatro[3][0]) {
+    return Math.abs(ultimasQuatro[0][0] - ultimasQuatro[0][1]) < Math.abs(ultimasQuatro[1][0] - ultimasQuatro[1][1]) ?
+      ultimasQuatro[0][0] :
+      ultimasQuatro[1][0];
+  } else return false;
+};
+
+const getVelocidadeMediaVento = (fatorTopografico, fatorRugosidade, velBasica) => {
+  return fatorTopografico * fatorRugosidade * velBasica;
+};
+
+const getIntervaloTempo = (maiorDimensao, velocidadeMediaVento) => {
+  return 7.5 * ( maiorDimensao / velocidadeMediaVento );
 };
 
 const pegarProximoIntervaloDeTempo = (estimado, calculado) => {
@@ -318,63 +268,6 @@ const pegarProximoIntervaloDeTempo = (estimado, calculado) => {
 	return true;
 };
 
-const getFatorRugosidade = (categoria, intervaloTempo, alturaDoPonto) => {
-  let parametrosMeteorologicos = getParametrosMeteorologicos(categoria, intervaloTempo);
-  let fatorDeRajada = getFatorDeRajada(intervaloTempo);
-
-  return parametrosMeteorologicos.b * fatorDeRajada * ((alturaDoPonto/10) ** parametrosMeteorologicos.p);
-};
-
-const getVelocidadeMediaVento = (fatorTopografico, fatorRugosidade, velBasica) => {
-	return fatorTopografico * fatorRugosidade * velBasica;
-};
-
-const getIntervaloTempo = (maiorDimensao, velocidadeMediaVento) => {
-	return 7.5 * ( maiorDimensao / velocidadeMediaVento );
-};
-
-const compararIteracoes = (iteracoes) => {
-	if (iteracoes.length < 4) return false;
-
-	let ultimasQuatro = iteracoes.slice(-4);
-
-	if (ultimasQuatro[0][0] === ultimasQuatro[2][0] && ultimasQuatro[1][0] === ultimasQuatro[3][0]) {
-		return Math.abs(ultimasQuatro[0][0] - ultimasQuatro[0][1]) < Math.abs(ultimasQuatro[1][0] - ultimasQuatro[1][1]) ?
-			ultimasQuatro[0][0] :
-			ultimasQuatro[1][0];
-	} else return false;
-};
-
-const determinarFatorRugosidadePorIteracao = ({
-	categoria,
-	intervaloTempoEstimado,
-	maiorDimensao,
-	alturaDoPonto,
-	indiceTipoDeRelevo,
-	inclinacaoDoTalude,
-	alturaDoTalude,
-	velocidadeBasica
-}) => {
-	let fatorTopografico = getFatorTopografico(1, alturaDoTalude, alturaDoPonto, inclinacaoDoTalude),
-			fatorRugosidade,
-			velocidadeMedia,
-			intervaloDeTempoCalculado,
-			iteracoes = [];
-
-	while (!compararIteracoes(iteracoes)) {
-		fatorRugosidade = fatorRugosidade = getFatorRugosidade(categoria, intervaloTempoEstimado, alturaDoPonto);
-		velocidadeMedia = getVelocidadeMediaVento(fatorTopografico, fatorRugosidade, velocidadeBasica);
-		intervaloDeTempoCalculado = getIntervaloTempo(maiorDimensao, velocidadeMedia);
-
-		intervaloTempoEstimado = pegarProximoIntervaloDeTempo(intervaloTempoEstimado, intervaloDeTempoCalculado);
-
-		iteracoes.push([intervaloTempoEstimado, intervaloDeTempoCalculado]);
-	}
-
-	return fatorRugosidade;
-};
-
-
 /**
  *
  * Fim dos cálculos referentes a seção 5.3 da NBR6123.
@@ -388,22 +281,13 @@ const determinarFatorRugosidadePorIteracao = ({
  *
  */
 
-const getFatorEstatistico = (grupo) => {
-  switch (grupo) {
-    case 1:
-      return 1.1;
-    case 2:
-      return 1.0;
-    case 3:
-      return 0.95;
-    case 4:
-      return 0.88;
-    case 5:
-      return 0.83;
-    default:
-      throw new Error("Grau de segurança inválido");
-  }
-};
+const FATORES_ESTATISTICOS = [
+  1.1,
+  1.0,
+  0.95,
+  0.88,
+  0.83
+];
 
 const determinarFatorEstatistico = (probabilidade, anos) => {
 	return 0.54*(-Math.log(1 - probabilidade) / anos) ** -0.157
@@ -420,15 +304,20 @@ const determinarFatorEstatistico = (probabilidade, anos) => {
  * Início dos cálculos referentes a seção 6. da NBR6123.
  *
  */
-const getCoeficientesDePressaoEForma = ({ a, b, h, nAguas, angVento, angTelhado }) => {
-
-};
-
 const getCoeficienteDeFormaParedesPlantaRetangular = ({comprimento, largura, altura}) => {
-	let alturaRelativa = altura/largura,
-			proporcaoEntreDimensoesHorizontais = comprimento/largura,
-			indiceAlturaRelativa,
-			coeficientesPressaoExterna;
+  let alturaRelativa,
+      proporcaoEntreDimensoesHorizontais,
+      indiceAlturaRelativa,
+      coeficientesPressaoExterna;
+
+  if (comprimento < largura) {
+    let helper = largura;
+    largura = comprimento;
+    comprimento = helper;
+  }
+
+	alturaRelativa = altura/largura;
+	proporcaoEntreDimensoesHorizontais = comprimento/largura;
 
 	if (alturaRelativa <= 1/2) {
 		indiceAlturaRelativa = 0;
@@ -439,9 +328,9 @@ const getCoeficienteDeFormaParedesPlantaRetangular = ({comprimento, largura, alt
 	}
 
 	if (proporcaoEntreDimensoesHorizontais >= 1 && proporcaoEntreDimensoesHorizontais <= 3/2) {
-		coeficientesPressaoExterna = tabela4[indiceAlturaRelativa][0];
+		coeficientesPressaoExterna = TABELA_4[indiceAlturaRelativa][0];
 	}  else if (proporcaoEntreDimensoesHorizontais >= 2 && proporcaoEntreDimensoesHorizontais <= 4) {
-		coeficientesPressaoExterna = tabela4[indiceAlturaRelativa][1];
+		coeficientesPressaoExterna = TABELA_4[indiceAlturaRelativa][1];
 	} else if (proporcaoEntreDimensoesHorizontais > 3/2 && proporcaoEntreDimensoesHorizontais < 2) {
 		coeficientesPressaoExterna = interpolarCoeficientesDePressaoExterna(indiceAlturaRelativa, proporcaoEntreDimensoesHorizontais);
 	} else {
@@ -466,8 +355,8 @@ const calcularA3eB3 = (proporcaoDimensoeshorizontais, coefDeReferencia) => {
 
 const interpolarCoeficientesDePressaoExterna = (indiceAlturaRelativa, proporcao) => {
 	let coeficientes = { ventoAZero: {}, ventoANoventa: {} };
-	let valoresParaProporcaoTresMeios = tabela4[indiceAlturaRelativa][0];
-	let valoresParaProporcaoDois = tabela4[indiceAlturaRelativa][1];
+	let valoresParaProporcaoTresMeios = TABELA_4[indiceAlturaRelativa][0];
+	let valoresParaProporcaoDois = TABELA_4[indiceAlturaRelativa][1];
 
 	coeficientes.ventoAZero = interpolarCoeficientes(
 		1.5,
@@ -506,7 +395,7 @@ const interpolar = (abs1, ord1, abs2, ord2, aCalcular) => {
 	return ord1 + (aCalcular - abs1) * deltaUnitario;
 };
 
-const tabela4 = [
+const TABELA_4 = [
 	[
 		{
 			ventoAZero: {
@@ -623,42 +512,43 @@ const tabela4 = [
 	]
 ];
 
-const getCoeficienteDePressaoInterna = ({
-	tipoPermeabilidade,
-	areaAberturaDominante,
-	areaOutrasAberturas,
-	secaoDaAbertura,
+const getCoeficienteDePressaoInterna = (
+  { tipo, faces, secao, areaAberturaDominante, somaAreaOutrasAberturas },
 	coefsPressaoExterna
-}) => {
-	switch(tipoPermeabilidade) {
-		case "faces opostas frente permeável":
-			return {
-				ventoAZero: 0.2,
-				ventoANoventa: -0.3
-			};
-    case "faces opostas lateral permeável":
-      return {
-      	ventoANoventa: 0.2,
-				ventoAZero: -0.3
-      };
-		case "quatro faces":
-			return [0, -0.3];
-		case "abertura dominante":
-			return calcularIndicePressaoInternaAberturaDominante(
-				areaAberturaDominante,
-				areaOutrasAberturas,
-				secaoDaAbertura,
-				coefsPressaoExterna
-			);
-		default:
-			throw new Error("Tipo inválido de permeabilidade: " + tipoPermeabilidade);
-	}
+) => {
+  if (tipo === "faces opostas") {
+    switch (faces) {
+      case "frente-tras":
+        return {
+          ventoAZero: 0.2,
+          ventoANoventa: -0.3
+        };
+      case "laterais":
+        return {
+          ventoANoventa: 0.2,
+          ventoAZero: -0.3
+        };
+      default:
+        throw new Error("O valor de entrada para faces permeáveis não é válido: " + faces);
+    }
+  } else if (tipo === "quatro faces") {
+    return [0, -0.3]
+  } else if (tipo === "abertura dominante") {
+    return calcularIndicePressaoInternaAberturaDominante(
+      areaAberturaDominante,
+      somaAreaOutrasAberturas,
+      secao,
+      coefsPressaoExterna
+    )
+  } else {
+    throw new Error("O valor de entrada para tipo de permeabilidade não é válido :" + tipo);
+  }
 };
 
 const calcularIndicePressaoInternaAberturaDominante = (
 	 areaAberturaDominante,
 	 areaOutrasAberturas,
-	 secaoDaAbertura,
+	 secao,
 	 coefsPressaoExterna
 ) => {
 	const coeficientes = {
@@ -668,9 +558,9 @@ const calcularIndicePressaoInternaAberturaDominante = (
 	const proporcaoAberturas = areaAberturaDominante / areaOutrasAberturas;
 
 	coeficientes.ventoAZero = IndicePressaoInternaAberturaDominanteVentoAZero(
-		secaoDaAbertura, proporcaoAberturas, coefsPressaoExterna.ventoAZero);
+		  secao, proporcaoAberturas, coefsPressaoExterna.ventoAZero);
 	coeficientes.ventoANoventa = IndicePressaoInternaAberturaDominanteVentoANoventa(
-		secaoDaAbertura, proporcaoAberturas, coefsPressaoExterna.ventoANoventa);
+		  secao, proporcaoAberturas, coefsPressaoExterna.ventoANoventa);
 
 	return coeficientes;
 };
@@ -757,7 +647,6 @@ const coefPressaoInternaSotavento = (
 const coefPressaoInternaAltaSuccao = (
 	proporcaoAbertura
 ) => {
-
 	if (proporcaoAbertura === 0.25) {
 		return -0.4;
 	} else if (proporcaoAbertura === 0.50) {
@@ -783,7 +672,7 @@ const coefPressaoInternaBaixaSuccao = (
 
 //	Tabela 5 - coeficientes de pressão e de forma, externos, para telhados com duas águas, simétricos,
 //	em edificações de planta retangular
-const tabela5 = [
+const TABELA_5 = [
 	[
 		{
 			ventoAZero: {
@@ -1067,7 +956,7 @@ const tabela5 = [
 ];
 
 const getCoefsPressaoExternaTelhado = ({
-	angulo,
+	inclinacaoTelhado,
 	altura,
 	largura
 }) => {
@@ -1080,7 +969,7 @@ const getCoefsPressaoExternaTelhado = ({
 		throw new Error('Altura fora da faixa aceitável: ' + altura);
 	}
 
-	return tabela5[indiceAlturaRelativa][getIndiceAngulo(indiceAlturaRelativa, angulo)];
+	return TABELA_5[indiceAlturaRelativa][getIndiceAngulo(indiceAlturaRelativa, inclinacaoTelhado)];
 };
 
 const getIndiceAngulo = (
@@ -1141,70 +1030,49 @@ const getIndiceAngulo = (
  */
 
 const pegarCoeficientesDePressao = ({
-	velocidadeBasica,
-	tipoDeRelevo,
-	alturaTalude,
-	alturaDoPonto,
-	inclinacaoTalude,
-	categoria,
-	intervaloTempo,
-	grupo,
-	comprimento,
-	largura,
-	altura,
-	anguloTelhado,
-	tipoPermeabilidade,
-	areaAberturaDominante,
-	areaOutrasAberturas,
-	secaoDaAbertura
+    velocidadeBasica,
+    topografia,
+    rugosidade,
+    classeDimensoes,
+    fatorEstatistico,
+    permeabilidade,
+    dimensoes
 }) => {
-	let s1 = getFatorTopografico(
-		tipoDeRelevo,
-		alturaTalude,
-		alturaDoPonto,
-		inclinacaoTalude
-	);
-	let s2 = getFatorRugosidade(
-		categoria,
-		intervaloTempo,
-		alturaDoPonto
-	);
-	let s3 = getFatorEstatistico(grupo);
+	let fatorTopografico = getFatorTopografico(topografia, dimensoes);
+
+	let fatorRugosidade = getFatorRugosidade({
+    rugosidade,
+    classeDimensoes,
+    topografia,
+    dimensoes,
+    velocidadeBasica
+  });
+
+	fatorEstatistico = FATORES_ESTATISTICOS[fatorEstatistico];
 
 	let velocidadeCatacteristica = getVelocidadeCaracteristica({
-		velocidadeBasica: velocidadeBasica,
-		fatorTopografico: s1,
-		fatorRugosidade: s2,
-		fatorEstatistico: s3
+		velocidadeBasica,
+		fatorTopografico,
+		fatorRugosidade,
+		fatorEstatistico
 	});
 
 	let pressaoDinamica = getPressaoDinamica(velocidadeCatacteristica);
 
-	let coeficientesPressaoExternaParede = getCoeficienteDeFormaParedesPlantaRetangular({
-		comprimento: comprimento,
-		largura: largura,
-		altura: altura
-	});
+	let coefsPressaoExternaParedes = getCoeficienteDeFormaParedesPlantaRetangular(dimensoes);
 
-	let coeficientesPressaoExternaTelhado = getCoefsPressaoExternaTelhado({
-		angulo: anguloTelhado,
-		altura: altura,
-		largura: largura
-	});
+	let coefsPressaoExternaTelhado = getCoefsPressaoExternaTelhado(dimensoes);
 
-	let coeficientesDePressaoInterna = getCoeficienteDePressaoInterna({
-		tipoPermeabilidade: tipoPermeabilidade,
-		areaAberturaDominante: areaAberturaDominante,
-		areaOutrasAberturas: areaOutrasAberturas,
-		secaoDaAbertura: secaoDaAbertura,
-		coefsPressaoExterna: coeficientesPressaoExternaParede
-	});
+	let coefPressaoInterna = getCoeficienteDePressaoInterna(
+	  permeabilidade,
+    coefsPressaoExternaParedes
+  );
 
 	return {
 		pressaoDinamica: pressaoDinamica/1000,
-		coefPressaoExternaParedes: coeficientesPressaoExternaParede,
-		coefPressaoExternaTelhado: coeficientesPressaoExternaTelhado,
-		coefPressaoInterna: coeficientesDePressaoInterna
+		coefsPressaoExternaParedes,
+		coefsPressaoExternaTelhado,
+		coefPressaoInterna
 	}
 };
 
@@ -1214,7 +1082,7 @@ const getCoeficientesEfetivosDePressao = ({
 	coefPressaoExternaTelhado,
 	coefPressaoInterna
 }) => {
-	if (tipoPermeabilidade === 'abertura dominante' || new RegExp(/faces opostas/).test(tipoPermeabilidade)) {
+	if (tipoPermeabilidade === 'abertura dominante' || "faces opostas") {
 		return {
 			ventoAZero: {
 				paredeEsquerda: coefPressaoExternaParede.ventoAZero['a1'] - coefPressaoInterna.ventoAZero,
@@ -1268,17 +1136,9 @@ const getCoeficientesEfetivosDePressao = ({
 };
 
 module.exports = {
-  getFatorTopografico: getFatorTopografico,
-  getFatorRugosidade: getFatorRugosidade,
-  getFatorEstatistico: getFatorEstatistico,
-	determinarFatorRugosidadePorIteracao: determinarFatorRugosidadePorIteracao,
-	getCoeficienteDeFormaParedesPlantaRetangular: getCoeficienteDeFormaParedesPlantaRetangular,
-	getCoeficienteDePressaoInterna: getCoeficienteDePressaoInterna,
 	interpolar: interpolar,
 	interpolarCoeficientes: interpolarCoeficientes,
-	getCoefsPressaoExternaTelhado: getCoefsPressaoExternaTelhado,
 	pegarCoeficientesDePressao: pegarCoeficientesDePressao,
-	getCoeficientesEfetivosDePressao: getCoeficientesEfetivosDePressao
 };
 
 
