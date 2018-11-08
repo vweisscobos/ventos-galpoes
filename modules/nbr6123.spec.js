@@ -41,7 +41,7 @@ describe('testa funções auxiliares',  () => {
 
 describe(`Bateria de testes para validar a obtenção das pressões efetivas`,  () => {
   let coeficientesDePressao = nbr6123.pegarCoeficientesDePressao({
-    classe: 2,
+    classeDimensoes: 2,
     dimensoes: {
       altura: 6,
       inclinacaoTelhado: 15,
@@ -51,8 +51,8 @@ describe(`Bateria de testes para validar a obtenção das pressões efetivas`,  
     fatorEstatistico: 1,
     permeabilidade: { tipo: "quatro faces" },
     rugosidade: 0,
-    topografia: 3,
-    velocidade: 45
+    topografia: 1,
+    velocidadeBasica: 45
   });
 
   console.log(coeficientesDePressao);

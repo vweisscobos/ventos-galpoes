@@ -7,7 +7,9 @@ const Geometry = require('./geometry');
  *
  */
 const getVelocidadeCaracteristica = ({velocidadeBasica, fatorTopografico, fatorRugosidade, fatorEstatistico}) => {
-	return velocidadeBasica * fatorTopografico * fatorRugosidade * fatorEstatistico;
+	console.log(velocidadeBasica, fatorEstatistico, fatorTopografico, fatorRugosidade);
+
+  return velocidadeBasica * fatorTopografico * fatorRugosidade * fatorEstatistico;
 };
 
 const getPressaoDinamica = (velocidadeCaracteristica) => {
@@ -135,6 +137,8 @@ const calcularFatorRugosidade = (rugosidade, classeDimensoes, alturaDoPonto) => 
 };
 
 const getParametrosMeteorologicos = (rugosidade, classeDimensoes) => {
+  console.log(rugosidade, classeDimensoes)
+
   return {
     p: PARAMETROS_METEOROLOGICOS[rugosidade]['parametros']['p'][classeDimensoes],
     b: PARAMETROS_METEOROLOGICOS[rugosidade]['parametros']['b'][classeDimensoes]
@@ -178,18 +182,21 @@ const FATORES_DE_RAJADA ={
   "A": 1.00,
   "B": 1.00,
   "C": 0.98,
-  3: 1.00,
-  5: 0.98,
-  10: 0.95,
-  15: 0.93,
-  20: 0.90,
-  30: 0.87,
-  45: 0.84,
-  60: 0.82,
-  120: 0.77,
-  300: 0.72,
-  600: 0.69,
-  3600: 0.65
+  0: 1.00,
+  1: 1.00,
+  2: 0.98,
+  '3s': 1.00,
+  '5s': 0.98,
+  '10s': 0.95,
+  '15s': 0.93,
+  '20s': 0.90,
+  '30s': 0.87,
+  '45s': 0.84,
+  '60s': 0.82,
+  '120s': 0.77,
+  '300s': 0.72,
+  '600s': 0.69,
+  '3600': 0.65
 };
 
 const determinarFatorRugosidadePorIteracao = ({
