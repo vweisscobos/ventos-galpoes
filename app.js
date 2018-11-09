@@ -4,6 +4,7 @@ let express = require('express'),
   cookieParser = require('cookie-parser'),
   mongoose = require('mongoose'),
   isopletas = require('./routes/isopletas'),
+  nbr6123 = require('./routes/nbr6123'),
   velocidadeBasicaModel = require('./models/velocidade-basica'),
   regioes = require('./assets/regioes_docs');
 
@@ -25,6 +26,8 @@ app.use(function(req, res, next) {
 // var db = mongoose.connection;
 
 isopletas.initialize(app);
+nbr6123.initialize(app);
+
 
 // velocidadeBasicaModel.inserirRegiaoDeVelocidade(regioes.regiaoV, (err, result) => {
 //   if (err) throw new Error("Something gone wrong: " + err);
