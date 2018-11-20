@@ -608,7 +608,7 @@ const coefPressaoInternaBarlavento = (proporcaoAbertura) => {
   } else if (proporcaoAbertura >= 6) {
     return 0.8;
   } else {
-    
+
   }
 };
 

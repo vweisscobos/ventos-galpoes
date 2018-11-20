@@ -69,7 +69,8 @@ const getParametrosMeteorologicos = (rugosidade, classeDimensoes) => {
 const determinarFatorRugosidadePorIteracao = ({
   rugosidade,
   intervaloTempoEstimado,
-  dimensoes,
+  alturaPonto,
+  maiorDimensao,
   topografia,
   velocidadeBasica,
   fatorTopografico
@@ -77,15 +78,12 @@ const determinarFatorRugosidadePorIteracao = ({
   let fatorRugosidade,
     velocidadeMedia,
     intervaloDeTempoCalculado,
-    maiorDimensao,
     iteracoes = [];
 
-  fatorTopografico =  getFatorTopografico(topografia, dimensoes);
-
-  maiorDimensao = determinaMaiorDimensao(dimensoes);
+  fatorTopografico =  getFatorTopografico(topografia, alturaPonto);
 
   while (!compararIteracoes(iteracoes)) {
-    fatorRugosidade = calcularFatorRugosidade(rugosidade, intervaloTempoEstimado, dimensoes.altura);
+    fatorRugosidade = calcularFatorRugosidade(rugosidade, intervaloTempoEstimado, alturaPonto);
     velocidadeMedia = getVelocidadeMediaVento(fatorTopografico, fatorRugosidade, velocidadeBasica);
     intervaloDeTempoCalculado = getIntervaloTempo(maiorDimensao, velocidadeMedia);
 
@@ -95,15 +93,6 @@ const determinarFatorRugosidadePorIteracao = ({
   }
 
   return fatorRugosidade;
-};
-
-const determinaMaiorDimensao = ({ altura, largura, profundidade}) => {
-  let maiorDimensao;
-
-  maiorDimensao = altura >= largura ? altura : largura;
-  maiorDimensao = maiorDimensao >= profundidade ? maiorDimensao : profundidade;
-
-  return maiorDimensao;
 };
 
 const compararIteracoes = (iteracoes) => {

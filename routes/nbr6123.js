@@ -7,7 +7,7 @@ module.exports.initialize = (connection) => {
   });
 
   connection.post('/v1/api-nbr6123/acao-ventos', function(req, res) {
-    let coeficientesDePressao = NBR6123.getCoeficientesDePressao(req.body)
+    let coeficientesDePressao = NBR6123.getCoeficientesDePressao(req.body);
 
     let coeficientesDePressaoEfetiva = NBR6123.getCoeficientesEfetivosDePressao({
       tipoPermeabilidade: req.body.permeabilidade.tipo,
@@ -16,11 +16,14 @@ module.exports.initialize = (connection) => {
       coefPressaoExternaParede: coeficientesDePressao.coefsPressaoExternaParedes
     });
 
-    console.log(coeficientesDePressaoEfetiva)
+    let infos = NBR6123.getInfosVento( req.body );
+
+    console.log(coeficientesDePressaoEfetiva);
 
     res.json(Object.assign(
       {},
       {
+        infos: infos,
         coefsPressao: coeficientesDePressao,
         coefsPressaoEfetiva: coeficientesDePressaoEfetiva
       }

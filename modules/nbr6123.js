@@ -3,9 +3,9 @@ const RugosidadeTerreno = require('./rugosidadeTerreno');
 const FatorEstatistico = require('./fatorEstatistico');
 const GetCoeficientePressao = require('./coeficientesDePressao');
 
-const getFatorTopografico = ( topografia, dimensoes ) => {
+const getFatorTopografico = ( topografia, altura ) => {
   if (topografia["tipo"])
-      return Topografia.calcularFatorTopografico(topografia, dimensoes.altura);
+      return Topografia.calcularFatorTopografico(topografia, altura);
 
   return Topografia.FATORES_FIXOS[topografia];
 };
@@ -18,52 +18,101 @@ const getPressaoDinamica = (velocidadeCaracteristica) => {
 	return 0.613*(velocidadeCaracteristica ** 2);
 };
 
-const getFatorRugosidade = ({ rugosidade, classeDimensoes, topografia, dimensoes, velocidadeBasica }, fatorTopografico) => {
+const getClasseDimensoes = (maiorDimensao) => {
+  if (maiorDimensao <= 20) return 0;
+  if (maiorDimensao >= 20 &&  maiorDimensao <= 50) return 1;
+  if (maiorDimensao > 50 &&  maiorDimensao <= 80) return 2;
+  if (maiorDimensao > 80) return 3;
+};
+
+const getFatorRugosidade = ({
+	rugosidade,
+	topografia,
+	velocidadeBasica,
+	alturaPonto,
+	fatorTopografico,
+	maiorDimensao
+}) => {
+  let classeDimensoes = getClasseDimensoes(maiorDimensao);
+
   if (classeDimensoes > 2) return RugosidadeTerreno.determinarFatorRugosidadePorIteracao({
     rugosidade,
     intervaloTempoEstimado: 15,
     topografia,
-    dimensoes,
+    maiorDimensao,
+    alturaPonto,
     velocidadeBasica,
     fatorTopografico
   });
 
-  else return RugosidadeTerreno.calcularFatorRugosidade(rugosidade, classeDimensoes, dimensoes.altura);
+  else return RugosidadeTerreno.calcularFatorRugosidade(rugosidade, classeDimensoes, alturaPonto);
 };
 
-const getCoeficientesDePressao = ({
-    velocidadeBasica,
-    topografia,
-    rugosidade,
-    classeDimensoes,
-    fatorEstatistico,
-    permeabilidade,
-    dimensoes
-}) => {
-	let fatorTopografico = getFatorTopografico(topografia, dimensoes);
+const maiorValor = (...valores) => {
+	let maior = valores[0];
 
-	let fatorRugosidade = getFatorRugosidade(
-	  {
+	for (let valor of valores) if (valor > maior) maior = valor;
+
+	return maior;
+};
+
+const getInfosVento = ({ topografia, dimensoes, rugosidade, velocidadeBasica, fatorEstatistico }) => {
+  let fatorTopografico = getFatorTopografico(topografia, dimensoes.altura);
+
+  let fatorRugosidade = {
+    ventoAZero: getFatorRugosidade({
       rugosidade,
-      classeDimensoes,
       topografia,
-      dimensoes,
-      velocidadeBasica
-    },
-    fatorTopografico
-  );
+      alturaPonto: dimensoes.altura,
+      maiorDimensao: maiorValor(dimensoes.altura, dimensoes.largura),
+      velocidadeBasica,
+      fatorTopografico
+    }),
+    ventoANoventa: getFatorRugosidade({
+      rugosidade,
+      topografia,
+      alturaPonto: dimensoes.altura,
+      maiorDimensao: maiorValor(dimensoes.altura, dimensoes.comprimento),
+      velocidadeBasica,
+      fatorTopografico
+    })
+  };
 
-	fatorEstatistico = FatorEstatistico.VALORES_TABELADOS[fatorEstatistico];
+  fatorEstatistico = FatorEstatistico.VALORES_TABELADOS[fatorEstatistico];
 
-	let velocidadeCatacteristica = getVelocidadeCaracteristica({
-		velocidadeBasica,
+  let velocidadeCatacteristica = {
+    ventoANoventa: getVelocidadeCaracteristica({
+      velocidadeBasica,
+      fatorTopografico,
+      fatorRugosidade: fatorRugosidade.ventoANoventa,
+      fatorEstatistico
+    }),
+    ventoAZero: getVelocidadeCaracteristica({
+      velocidadeBasica,
+      fatorTopografico,
+      fatorRugosidade: fatorRugosidade.ventoAZero,
+      fatorEstatistico
+    })
+  };
+
+  let pressaoDinamica = {
+    ventoANoventa: getPressaoDinamica(velocidadeCatacteristica.ventoANoventa),
+    ventoAZero: getPressaoDinamica(velocidadeCatacteristica.ventoAZero)
+  };
+
+  return {
+  	pressaoDinamica,
+		velocidadeCatacteristica,
 		fatorTopografico,
 		fatorRugosidade,
 		fatorEstatistico
-	});
+	}
+};
 
-	let pressaoDinamica = getPressaoDinamica(velocidadeCatacteristica);
-
+const getCoeficientesDePressao = ({
+    permeabilidade,
+    dimensoes
+}) => {
 	let coefsPressaoExternaParedes = GetCoeficientePressao.externaParedesPlantaRetangular(dimensoes);
 
 	let coefsPressaoExternaTelhado = GetCoeficientePressao.externaTelhado(dimensoes);
@@ -74,7 +123,6 @@ const getCoeficientesDePressao = ({
   );
 
 	return {
-		pressaoDinamica: pressaoDinamica/1000,
 		coefsPressaoExternaParedes,
 		coefsPressaoExternaTelhado,
 		coefPressaoInterna
@@ -87,7 +135,6 @@ const getCoeficientesEfetivosDePressao = ({
 	coefPressaoExternaTelhado,
 	coefPressaoInterna
 }) => {
-  console.log(tipoPermeabilidade, coefPressaoExternaParede, coefPressaoExternaTelhado, coefPressaoInterna);
 
 	if (tipoPermeabilidade === 'abertura dominante' || tipoPermeabilidade === "faces opostas") {
 		return [{
@@ -145,8 +192,8 @@ const getCoeficientesEfetivosDePressao = ({
 };
 
 module.exports = {
+	getInfosVento,
   getCoeficientesEfetivosDePressao,
   getCoeficientesDePressao
 };
-
 
