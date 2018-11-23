@@ -18,6 +18,8 @@ module.exports.initialize = (connection) => {
 
     let infos = NBR6123.getInfosVento( req.body );
 
+    infos['velocidadeBasica'] = req.body.velocidadeBasica;
+
     console.log(coeficientesDePressaoEfetiva);
 
     res.json(Object.assign(

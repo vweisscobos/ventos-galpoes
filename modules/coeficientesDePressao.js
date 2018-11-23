@@ -402,6 +402,10 @@ const TABELA_5 = [
   ]
 ];
 
+const pegarAlturaRelativaParedes = (altura, largura) => {
+
+};
+
 const externaParedesPlantaRetangular = ({comprimento, largura, altura}) => {
   let alturaRelativa,
     proporcaoEntreDimensoesHorizontais,
@@ -456,7 +460,7 @@ const interpolarCoeficientesDePressaoExterna = (indiceAlturaRelativa, proporcao)
   let valoresParaProporcaoTresMeios = TABELA_4[indiceAlturaRelativa][0];
   let valoresParaProporcaoDois = TABELA_4[indiceAlturaRelativa][1];
 
-  coeficientes.ventoAZero = interpolarCoeficientes(
+  coeficientes.ventoAZero = interpolarObjetos(
     1.5,
     valoresParaProporcaoTresMeios.ventoAZero,
     2,
@@ -464,7 +468,7 @@ const interpolarCoeficientesDePressaoExterna = (indiceAlturaRelativa, proporcao)
     proporcao
   );
 
-  coeficientes.ventoANoventa = interpolarCoeficientes(
+  coeficientes.ventoANoventa = interpolarObjetos(
     1.5,
     valoresParaProporcaoTresMeios.ventoANoventa,
     2,
@@ -475,7 +479,8 @@ const interpolarCoeficientesDePressaoExterna = (indiceAlturaRelativa, proporcao)
   return coeficientes;
 };
 
-const interpolarCoeficientes = (abs1, obj1, abs2, obj2, aCalcular) => {
+// TODO - colocar como método em utils
+const interpolarObjetos = (abs1, obj1, abs2, obj2, aCalcular) => {
   let coeficientesInterpolados = {};
 
   for (let val in obj1) {
@@ -521,48 +526,64 @@ const interna = (
 const calcularIndicePressaoInternaAberturaDominante = (
   areaAberturaDominante,
   areaOutrasAberturas,
+  aberturas,
   secao,
   coefsPressaoExterna
 ) => {
-  const coeficientes = {
-    ventoAZero: 0,
-    ventoANoventa: 0
-  };
-  const proporcaoAberturas = areaAberturaDominante / areaOutrasAberturas;
+  let coeficientes = { ventoAZero: 0, ventoANoventa: 0 },
+      proporcaoAberturasVentoAZero,
+      proporcaoAberturasVentoANoventa;
 
   coeficientes.ventoAZero = IndicePressaoInternaAberturaDominanteVentoAZero(
-    secao, proporcaoAberturas, coefsPressaoExterna.ventoAZero);
+    secao, aberturas, coefsPressaoExterna.ventoAZero);
   coeficientes.ventoANoventa = IndicePressaoInternaAberturaDominanteVentoANoventa(
-    secao, proporcaoAberturas, coefsPressaoExterna.ventoANoventa);
+    secao, aberturas, coefsPressaoExterna.ventoANoventa);
 
   return coeficientes;
 };
 
+const somarAreasSubmetidasASuccaoExterna = (areas, anguloDoVento) => {
+  switch (anguloDoVento) {
+    case 0:
+      return areas['a1'] + areas['a2'] + areas['a3'] + areas['b1'] + areas['b2'] + areas['b3'] + areas['d1'] + areas['d2'];
+    case 90:
+      return areas['c1'] + areas['c2'] + areas['b1'] + areas['b2'] + areas['b3'] + areas['d1'] + areas['d2'];
+    case 180:
+      return areas['a1'] + areas['a2'] + areas['a3'] + areas['b1'] + areas['b2'] + areas['b3'] + areas['c1'] + areas['c2'];
+    case 270:
+      return areas['c1'] + areas['c2'] + areas['a1'] + areas['a2'] + areas['a3'] + areas['d1'] + areas['d2'];
+  }
+};
+
 const IndicePressaoInternaAberturaDominanteVentoAZero = (
   secao,
-  proporcaoAberturas,
+  aberturas,
   coefsPressaoExterna
 ) => {
 
-  secao = new RegExp(/c/).test(secao) ? 'c' : secao;
-  secao = new RegExp(/d/).test(secao) ? 'd' : secao;
+  // secao = new RegExp(/c/).test(secao) ? 'c' : secao;
+  // secao = new RegExp(/d/).test(secao) ? 'd' : secao;
 
   switch(secao) {
-    case 'c':
-      return coefPressaoInternaBarlavento(proporcaoAberturas);
+    case 'c1':
+      return coefPressaoInternaBarlavento(secao, aberturas);
+    case 'c2':
+      return coefPressaoInternaBarlavento(secao,aberturas);
     case 'a1':
-      return coefPressaoInternaAltaSuccao(proporcaoAberturas);
+      return coefPressaoInternaAltaSuccao(secao, aberturas);
     case 'b1':
-      return coefPressaoInternaAltaSuccao(proporcaoAberturas);
+      return coefPressaoInternaAltaSuccao(secao, aberturas);
     case 'a2':
-      return coefPressaoInternaBaixaSuccao('a2', coefsPressaoExterna);
+      return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
     case 'b2':
-      return coefPressaoInternaBaixaSuccao('b2', coefsPressaoExterna);
+      return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
     case 'a3':
-      return coefPressaoInternaBaixaSuccao('a3', coefsPressaoExterna);
+      return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
     case 'b3':
-      return coefPressaoInternaBaixaSuccao('b3', coefsPressaoExterna);
-    case 'd':
+      return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
+    case 'd1':
+      return coefPressaoInternaSotavento('d', coefsPressaoExterna);
+    case 'd2':
       return coefPressaoInternaSotavento('d', coefsPressaoExterna);
     default:
       throw new Error('Seção de pressão externa inválida: ' + secao);
@@ -571,45 +592,87 @@ const IndicePressaoInternaAberturaDominanteVentoAZero = (
 
 const IndicePressaoInternaAberturaDominanteVentoANoventa = (
   secao,
-  proporcaoAberturas,
+  aberturas,
   coefsPressaoExterna
 ) => {
 
-  secao = new RegExp(/a/).test(secao) ? 'a' : secao;
-  secao = new RegExp(/b/).test(secao) ? 'b' : secao;
+  // secao = new RegExp(/a/).test(secao) ? 'a' : secao;
+  // secao = new RegExp(/b/).test(secao) ? 'b' : secao;
 
   switch(secao) {
-    case 'a':
-      return coefPressaoInternaBarlavento(proporcaoAberturas);
+    case 'a1':
+      return coefPressaoInternaBarlavento(secao, aberturas);
+    case 'a2':
+      return coefPressaoInternaBarlavento(secao, aberturas);
+    case 'a3':
+      return coefPressaoInternaBarlavento(secao, aberturas);
     case 'c1':
-      return coefPressaoInternaAltaSuccao(proporcaoAberturas);
+      return coefPressaoInternaAltaSuccao(secao, aberturas);
     case 'd1':
-      return coefPressaoInternaAltaSuccao(proporcaoAberturas);
+      return coefPressaoInternaAltaSuccao(secao, aberturas);
     case 'c2':
-      return coefPressaoInternaBaixaSuccao('c2', coefsPressaoExterna);
+      return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
     case 'd2':
-      return coefPressaoInternaBaixaSuccao('d2', coefsPressaoExterna);
-    case 'b':
+      return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
+    case 'b1':
+      return coefPressaoInternaSotavento('b', coefsPressaoExterna);
+    case 'b2':
+      return coefPressaoInternaSotavento('b', coefsPressaoExterna);
+    case 'b3':
       return coefPressaoInternaSotavento('b', coefsPressaoExterna);
     default:
       throw new Error('Seção de pressão externa inválida: ' + secao);
   }
 };
 
-const coefPressaoInternaBarlavento = (proporcaoAbertura) => {
-  if (proporcaoAbertura === 1) {
-    return 0.1;
-  } else if (proporcaoAbertura === 1.5) {
-    return 0.3;
-  } else if (proporcaoAbertura === 2) {
-    return 0.5;
-  } else if (proporcaoAbertura === 3) {
-    return 0.6;
-  } else if (proporcaoAbertura >= 6) {
-    return 0.8;
-  } else {
+const PI_AD_BARLAVENTO = new Map(
+  [
+    [1, 0.1],
+    [1.5, 0.3],
+    [2, 0.5],
+    [3, 0.6],
+    [6, 0.8]
+  ]
+);
 
+//  TODO - colocar como método de utils
+const pegarLimitesDeIntervalo = (conjunto, pontoDoIntervalo) => {
+  let anterior;
+
+  for (let val of conjunto) {
+    if (!anterior) anterior = val;
+
+    if (pontoDoIntervalo > anterior && pontoDoIntervalo < val) return [anterior, val];
+
+    anterior = val;
   }
+};
+
+const coefPressaoInternaBarlavento = (secao, aberturas) => {
+  let coeficientePressaoInterna,
+      total,
+      proporcao;
+
+  total = somarAreasSubmetidasASuccaoExterna(aberturas);
+  proporcao = aberturas[secao] / total;
+
+  if (proporcao >= 6) return 0.8;
+
+  coeficientePressaoInterna = PI_AD_BARLAVENTO.get(proporcao);
+
+  if (!coeficientePressaoInterna) {
+    let limites = pegarLimitesDeIntervalo(PI_AD_BARLAVENTO.keys(), proporcao);
+
+    return Utils.interpolar(
+      limites[0],
+      PI_AD_BARLAVENTO[limites[0]],
+      limites[1],
+      PI_AD_BARLAVENTO[limites[1]],
+      proporcao
+    );
+  }
+
+  return coeficientePressaoInterna;
 };
 
 const coefPressaoInternaSotavento = (
@@ -619,23 +682,43 @@ const coefPressaoInternaSotavento = (
   return coeficientes[secao];
 };
 
+const PI_AD_ALTA_SUCCAO = new Map([
+  [0.25, -0.4],
+  [0.5, -0.5],
+  [0.75, -0.6],
+  [1, -0.7],
+  [1.5, -0.8],
+  [3, -0.9]
+]);
 
 const coefPressaoInternaAltaSuccao = (
-  proporcaoAbertura
+  secao,
+  aberturas
 ) => {
-  if (proporcaoAbertura === 0.25) {
-    return -0.4;
-  } else if (proporcaoAbertura === 0.50) {
-    return -0.5;
-  } else if (proporcaoAbertura === 0.75) {
-    return -0.6;
-  } else if (proporcaoAbertura === 1) {
-    return -0.7;
-  } else if (proporcaoAbertura === 1.5) {
-    return -0.8;
-  } else if (proporcaoAbertura >= 3) {
-    return -0.9;
+  let total,
+      proporcao,
+      coefPI;
+
+  total = somarAreasSubmetidasASuccaoExterna(aberturas);
+  proporcao = aberturas[secao] / total - aberturas[secao];
+
+  if (proporcao >= 3) return -0.9;
+
+  coefPI = PI_AD_ALTA_SUCCAO[proporcao];
+
+  if (!coefPI) {
+    let limites = pegarLimitesDeIntervalo(PI_AD_ALTA_SUCCAO.keys(), proporcao);
+
+    return Utils.interpolar(
+      limites[0],
+      PI_AD_ALTA_SUCCAO[limites[0]],
+      limites[1],
+      PI_AD_ALTA_SUCCAO[limites[1]],
+      proporcao
+    );
   }
+
+  return coefPI;
 };
 
 const coefPressaoInternaBaixaSuccao = (
@@ -650,69 +733,109 @@ const externaTelhado = ({
  altura,
  largura
 }) => {
-  let indiceAlturaRelativa;
+  let indiceAlturaRelativa,
+      indiceAngulo,
+      mapa;
 
-  if (altura/largura <= 0.5) indiceAlturaRelativa = 0;
-  else if (altura/largura > 0.5 && altura/largura <= 3/2) indiceAlturaRelativa = 1;
-  else if (altura/largura > 3/2 && altura/largura <= 6) indiceAlturaRelativa = 2;
+  indiceAlturaRelativa = pegarIndiceAlturaRelativaTelhado(altura, largura);
+  mapa = qualMapa(indiceAlturaRelativa);
+  indiceAngulo = mapa.get(inclinacaoTelhado);
+
+  if (!indiceAngulo) {
+    let angulosMaisProximos = acharAngulosTabeladosMaisProximos(inclinacaoTelhado, mapa);
+
+    return pegarValorTabela5({
+      indiceAlturaRelativa,
+      indiceAnguloUm: angulosMaisProximos[0][1],
+      anguloUm: angulosMaisProximos[0][0],
+      indiceAnguloDois: angulosMaisProximos[1][1],
+      anguloDois: angulosMaisProximos[1][0],
+      angulo: inclinacaoTelhado
+    });
+  } else {
+    return pegarValorTabela5({
+      indiceAlturaRelativa,
+      anguloUm: indiceAngulo
+    });
+  }
+};
+
+const pegarIndiceAlturaRelativaTelhado = (altura, largura) => {
+  if (altura/largura <= 0.5) return 0;
+  else if (altura/largura > 0.5 && altura/largura <= 3/2) return 1;
+  else if (altura/largura > 3/2 && altura/largura <= 6) return 2;
   else {
     throw new Error('Altura fora da faixa aceitável: ' + altura);
   }
-
-  return TABELA_5[indiceAlturaRelativa][getIndiceAngulo(indiceAlturaRelativa, inclinacaoTelhado)];
 };
 
-const getIndiceAngulo = (
+const pegarValorTabela5 = ({
   indiceAlturaRelativa,
-  angulo
-) => {
-  if (indiceAlturaRelativa === 0 || indiceAlturaRelativa === 1) {
-    switch(angulo) {
-      case 0:
-        return 0;
-      case 5:
-        return 1;
-      case 10:
-        return 2;
-      case 15:
-        return 3;
-      case 20:
-        return 4;
-      case 30:
-        return 5;
-      case 45:
-        return 6;
-      case 60:
-        return 7;
-      default:
-        throw new Error('angulo inválido: ' + angulo);
-    }
-  } else if (indiceAlturaRelativa === 2) {
-    switch(angulo) {
-      case 0:
-        return 0;
-      case 5:
-        return 1;
-      case 10:
-        return 2;
-      case 15:
-        return 3;
-      case 20:
-        return 4;
-      case 30:
-        return 5;
-      case 40:
-        return 6;
-      case 50:
-        return 7;
-      case 60:
-        return 8;
-      default:
-        throw new Error('angulo inválido: ' + angulo);
-    }
+  indiceAnguloUm,
+  anguloUm,
+  indiceAnguloDois,
+  anguloDois,
+  angulo = false
+}) => {
+  if (angulo) {
+    let coeficienteUm = TABELA_5[indiceAlturaRelativa][indiceAnguloUm],
+        coeficienteDois = TABELA_5[indiceAlturaRelativa][indiceAnguloDois];
+
+    return {
+      ventoAZero: interpolarObjetos(anguloUm, coeficienteUm.ventoAZero, anguloDois, coeficienteDois.ventoAZero, angulo),
+      ventoANoventa: interpolarObjetos(anguloUm, coeficienteUm.ventoANoventa, anguloDois, coeficienteDois.ventoANoventa, angulo)
+    };
+  } else {
+    return TABELA_5[indiceAlturaRelativa][indiceAnguloUm];
   }
 };
 
+const qualMapa = (indiceAlturaRelativa) => {
+  if (indiceAlturaRelativa === 0 || indiceAlturaRelativa === 1) {
+    return mapaAngulosAlturaRelativaFaixaUmEDois;
+  } else if (indiceAlturaRelativa === 2) {
+    return mapaAngulosAlturaRelativaFaixaTres;
+  }
+};
+
+const mapaAngulosAlturaRelativaFaixaUmEDois = new Map(
+  [
+    [0, 0],
+    [5, 1],
+    [10, 2],
+    [15, 3],
+    [20, 4],
+    [30, 5],
+    [45, 6],
+    [60, 7]
+  ]
+);
+
+const mapaAngulosAlturaRelativaFaixaTres = new Map(
+  [
+    [0, 0],
+    [5, 1],
+    [10, 2],
+    [15, 3],
+    [20, 4],
+    [30, 5],
+    [40, 6],
+    [50, 7],
+    [60, 8]
+  ]
+);
+
+const acharAngulosTabeladosMaisProximos = (angulo, mapa) => {
+  let anterior = 0;
+
+  for (var anguloTestado of mapa.keys()) {
+    if (angulo < anguloTestado && angulo > anterior) {
+      return [[anterior, mapa.get(anterior)], [anguloTestado, mapa.get(anguloTestado)]];
+    }
+
+    anterior = anguloTestado;
+  }
+};
 
 module.exports = {
   externaParedesPlantaRetangular,
