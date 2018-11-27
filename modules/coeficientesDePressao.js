@@ -491,7 +491,7 @@ const interpolarObjetos = (abs1, obj1, abs2, obj2, aCalcular) => {
 };
 
 const interna = (
-  { tipo, faces, secaoSelecionada, areaAberturaDominante, areaOutrasAberturas },
+  { tipo, faces, aberturas },
   coefsPressaoExterna
 ) => {
   if (tipo === "faces opostas") {
@@ -513,9 +513,7 @@ const interna = (
     return [0, -0.3]
   } else if (tipo === "abertura dominante") {
     return calcularIndicePressaoInternaAberturaDominante(
-      areaAberturaDominante,
-      areaOutrasAberturas,
-      secaoSelecionada,
+      aberturas,
       coefsPressaoExterna
     )
   } else {
@@ -524,20 +522,22 @@ const interna = (
 };
 
 const calcularIndicePressaoInternaAberturaDominante = (
-  areaAberturaDominante,
-  areaOutrasAberturas,
   aberturas,
-  secao,
   coefsPressaoExterna
 ) => {
   let coeficientes = { ventoAZero: 0, ventoANoventa: 0 },
-      proporcaoAberturasVentoAZero,
-      proporcaoAberturasVentoANoventa;
+      secaoDominante;
+
+  for (let secao in aberturas) {
+    if (!secaoDominante) secaoDominante = secao;
+
+    if (aberturas[secao] > aberturas[secaoDominante]) secaoDominante = secao;
+  }
 
   coeficientes.ventoAZero = IndicePressaoInternaAberturaDominanteVentoAZero(
-    secao, aberturas, coefsPressaoExterna.ventoAZero);
+    secaoDominante, aberturas, coefsPressaoExterna.ventoAZero);
   coeficientes.ventoANoventa = IndicePressaoInternaAberturaDominanteVentoANoventa(
-    secao, aberturas, coefsPressaoExterna.ventoANoventa);
+    secaoDominante, aberturas, coefsPressaoExterna.ventoANoventa);
 
   return coeficientes;
 };
@@ -566,13 +566,13 @@ const IndicePressaoInternaAberturaDominanteVentoAZero = (
 
   switch(secao) {
     case 'c1':
-      return coefPressaoInternaBarlavento(secao, aberturas);
+      return coefPressaoInternaBarlavento(secao, aberturas, 0);
     case 'c2':
-      return coefPressaoInternaBarlavento(secao,aberturas);
+      return coefPressaoInternaBarlavento(secao,aberturas, 0);
     case 'a1':
-      return coefPressaoInternaAltaSuccao(secao, aberturas);
+      return coefPressaoInternaAltaSuccao(secao, aberturas, 0);
     case 'b1':
-      return coefPressaoInternaAltaSuccao(secao, aberturas);
+      return coefPressaoInternaAltaSuccao(secao, aberturas, 0);
     case 'a2':
       return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
     case 'b2':
@@ -601,15 +601,15 @@ const IndicePressaoInternaAberturaDominanteVentoANoventa = (
 
   switch(secao) {
     case 'a1':
-      return coefPressaoInternaBarlavento(secao, aberturas);
+      return coefPressaoInternaBarlavento(secao, aberturas, 90);
     case 'a2':
-      return coefPressaoInternaBarlavento(secao, aberturas);
+      return coefPressaoInternaBarlavento(secao, aberturas, 90);
     case 'a3':
-      return coefPressaoInternaBarlavento(secao, aberturas);
+      return coefPressaoInternaBarlavento(secao, aberturas, 90);
     case 'c1':
-      return coefPressaoInternaAltaSuccao(secao, aberturas);
+      return coefPressaoInternaAltaSuccao(secao, aberturas, 90);
     case 'd1':
-      return coefPressaoInternaAltaSuccao(secao, aberturas);
+      return coefPressaoInternaAltaSuccao(secao, aberturas, 90);
     case 'c2':
       return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
     case 'd2':
@@ -642,18 +642,20 @@ const pegarLimitesDeIntervalo = (conjunto, pontoDoIntervalo) => {
   for (let val of conjunto) {
     if (!anterior) anterior = val;
 
-    if (pontoDoIntervalo > anterior && pontoDoIntervalo < val) return [anterior, val];
+    if (pontoDoIntervalo > anterior && pontoDoIntervalo < val) {
+      return [anterior, val];
+    }
 
     anterior = val;
   }
 };
 
-const coefPressaoInternaBarlavento = (secao, aberturas) => {
+const coefPressaoInternaBarlavento = (secao, aberturas, angulo) => {
   let coeficientePressaoInterna,
       total,
       proporcao;
 
-  total = somarAreasSubmetidasASuccaoExterna(aberturas);
+  total = somarAreasSubmetidasASuccaoExterna(aberturas, angulo);
   proporcao = aberturas[secao] / total;
 
   if (proporcao >= 6) return 0.8;
@@ -665,9 +667,9 @@ const coefPressaoInternaBarlavento = (secao, aberturas) => {
 
     return Utils.interpolar(
       limites[0],
-      PI_AD_BARLAVENTO[limites[0]],
+      PI_AD_BARLAVENTO.get(limites[0]),
       limites[1],
-      PI_AD_BARLAVENTO[limites[1]],
+      PI_AD_BARLAVENTO.get(limites[1]),
       proporcao
     );
   }
@@ -693,14 +695,15 @@ const PI_AD_ALTA_SUCCAO = new Map([
 
 const coefPressaoInternaAltaSuccao = (
   secao,
-  aberturas
+  aberturas,
+  angulo
 ) => {
   let total,
       proporcao,
       coefPI;
 
-  total = somarAreasSubmetidasASuccaoExterna(aberturas);
-  proporcao = aberturas[secao] / total - aberturas[secao];
+  total = somarAreasSubmetidasASuccaoExterna(aberturas, angulo);
+  proporcao = aberturas[secao] / (total - aberturas[secao]);
 
   if (proporcao >= 3) return -0.9;
 
@@ -709,7 +712,7 @@ const coefPressaoInternaAltaSuccao = (
   if (!coefPI) {
     let limites = pegarLimitesDeIntervalo(PI_AD_ALTA_SUCCAO.keys(), proporcao);
 
-    return Utils.interpolar(
+    return interpolarObjetos(
       limites[0],
       PI_AD_ALTA_SUCCAO[limites[0]],
       limites[1],
@@ -755,7 +758,7 @@ const externaTelhado = ({
   } else {
     return pegarValorTabela5({
       indiceAlturaRelativa,
-      anguloUm: indiceAngulo
+      indiceAnguloUm: indiceAngulo
     });
   }
 };
