@@ -8,6 +8,8 @@ let express = require('express'),
   velocidadeBasicaModel = require('./models/velocidade-basica'),
   regioes = require('./assets/regioes_docs');
 
+const PORT = process.env.PORT || 5000;
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -43,6 +45,6 @@ app.get('/', function(req, res) {
   res.send("API rodando");
 });
 
-app.listen(80, function() {
+app.listen(PORT, function() {
   console.log("running on port 80...");
 });
