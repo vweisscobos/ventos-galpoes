@@ -529,6 +529,10 @@ const calcularIndicePressaoInternaAberturaDominante = (
       secaoDominante;
 
   for (let secao in aberturas) {
+    aberturas[secao] = parseInt(aberturas[secao]);
+  }
+
+  for (let secao in aberturas) {
     if (!secaoDominante) secaoDominante = secao;
 
     if (aberturas[secao] > aberturas[secaoDominante]) secaoDominante = secao;
@@ -653,10 +657,20 @@ const pegarLimitesDeIntervalo = (conjunto, pontoDoIntervalo) => {
 const coefPressaoInternaBarlavento = (secao, aberturas, angulo) => {
   let coeficientePressaoInterna,
       total,
-      proporcao;
+      proporcao,
+      aberturaDominante = 0,
+      face;
+
+  face = secao.charAt(0);
+
+  for (let s in aberturas) {
+    if (s.charAt(0) === face) {
+      aberturaDominante += aberturas[s]
+    }
+  }
 
   total = somarAreasSubmetidasASuccaoExterna(aberturas, angulo);
-  proporcao = aberturas[secao] / total;
+  proporcao = aberturaDominante / total;
 
   if (proporcao >= 6) return 0.8;
 
@@ -712,13 +726,15 @@ const coefPressaoInternaAltaSuccao = (
   if (!coefPI) {
     let limites = pegarLimitesDeIntervalo(PI_AD_ALTA_SUCCAO.keys(), proporcao);
 
-    return interpolarObjetos(
+    coefPI = Utils.interpolar(
       limites[0],
-      PI_AD_ALTA_SUCCAO[limites[0]],
+      PI_AD_ALTA_SUCCAO.get(limites[0]),
       limites[1],
-      PI_AD_ALTA_SUCCAO[limites[1]],
+      PI_AD_ALTA_SUCCAO.get(limites[1]),
       proporcao
     );
+
+    return coefPI;
   }
 
   return coefPI;
