@@ -1,5 +1,10 @@
 const Utils = require("./utils");
 
+// PI - Pressão Interna
+// PE - Pressão Externa
+// AD - Abertura Dominante
+// AR - Altura Relativa
+
 const TABELA_4 = [
   [
     {
@@ -122,6 +127,7 @@ const TABELA_4 = [
 const TABELA_5 = [
   [
     {
+      //	Θ = 5°
       ventoAZero: {
         frente: -0.8,
         tras: -0.4
@@ -132,7 +138,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 5°
+      //	Θ = 5°
       ventoAZero: {
         frente: -0.8,
         tras: -0.4
@@ -143,7 +149,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 10°
+      //	Θ = 10°
       ventoAZero: {
         frente: -0.8,
         tras: -0.6
@@ -154,7 +160,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 15°
+      //	Θ = 15°
       ventoAZero: {
         frente: -0.8,
         tras: -0.6
@@ -165,7 +171,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 20°
+      //	Θ = 20°
       ventoAZero: {
         frente: -0.7,
         tras: -0.6
@@ -176,7 +182,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 30°
+      //	Θ = 30°
       ventoAZero: {
         frente: -0.7,
         tras: -0.6
@@ -187,7 +193,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 45°
+      //	Θ = 45°
       ventoAZero: {
         frente: -0.7,
         tras: -0.6
@@ -198,7 +204,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 60°
+      //	Θ = 60°
       ventoAZero: {
         frente: -0.7,
         tras: -0.6
@@ -211,7 +217,7 @@ const TABELA_5 = [
   ],
   [
     {
-      //	teta = 0°
+      //	Θ = 0°
       ventoAZero: {
         frente: -1.0,
         tras: -0.6
@@ -222,7 +228,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 5°
+      //	Θ = 5°
       ventoAZero: {
         frente: -0.9,
         tras: -0.6
@@ -233,7 +239,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 10°
+      //	Θ = 10°
       ventoAZero: {
         frente: -0.8,
         tras: -0.6
@@ -244,7 +250,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 15°
+      //	Θ = 15°
       ventoAZero: {
         frente: -0.8,
         tras: -0.6
@@ -255,7 +261,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 20°
+      //	Θ = 20°
       ventoAZero: {
         frente: -0.8,
         tras: -0.6
@@ -266,7 +272,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 30°
+      //	Θ = 30°
       ventoAZero: {
         frente: -0.8,
         tras: -0.8
@@ -277,7 +283,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 45°
+      //	Θ = 45°
       ventoAZero: {
         frente: -0.8,
         tras: -0.8
@@ -288,7 +294,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 60°
+      //	Θ = 60°
       ventoAZero: {
         frente: -0.8,
         tras: -0.8
@@ -301,7 +307,7 @@ const TABELA_5 = [
   ],
   [
     {
-      //	teta = 0°
+      //	Θ = 0°
       ventoAZero: {
         frente: -0.9,
         tras: -0.7
@@ -312,7 +318,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 5°
+      //	Θ = 5°
       ventoAZero: {
         frente: -0.8,
         tras: -0.8
@@ -323,7 +329,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 10°
+      //	Θ = 10°
       ventoAZero: {
         frente: -0.8,
         tras: -0.8
@@ -334,7 +340,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 15°
+      //	Θ = 15°
       ventoAZero: {
         frente: -0.8,
         tras: -0.8
@@ -345,7 +351,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 20°
+      //	Θ = 20°
       ventoAZero: {
         frente: -0.8,
         tras: -0.8
@@ -356,7 +362,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 30°
+      //	Θ = 30°
       ventoAZero: {
         frente: -0.8,
         tras: -0.7
@@ -367,7 +373,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 40°
+      //	Θ = 40°
       ventoAZero: {
         frente: -0.8,
         tras: -0.7
@@ -378,7 +384,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 50°
+      //	Θ = 50°
       ventoAZero: {
         frente: -0.8,
         tras: -0.7
@@ -389,7 +395,7 @@ const TABELA_5 = [
       }
     },
     {
-      //	teta = 60°
+      //	Θ = 60°
       ventoAZero: {
         frente: -0.8,
         tras: -0.7
@@ -402,9 +408,51 @@ const TABELA_5 = [
   ]
 ];
 
-const pegarAlturaRelativaParedes = (altura, largura) => {
+const PI_AD_BARLAVENTO = new Map(
+  [
+    [1, 0.1],
+    [1.5, 0.3],
+    [2, 0.5],
+    [3, 0.6],
+    [6, 0.8]
+  ]
+);
 
-};
+const PI_AD_ALTA_SUCCAO = new Map([
+  [0.25, -0.4],
+  [0.5, -0.5],
+  [0.75, -0.6],
+  [1, -0.7],
+  [1.5, -0.8],
+  [3, -0.9]
+]);
+
+const MAPA_ANG_AR_FAIXAS_UM_DOIS = new Map(
+  [
+    [0, 0],
+    [5, 1],
+    [10, 2],
+    [15, 3],
+    [20, 4],
+    [30, 5],
+    [45, 6],
+    [60, 7]
+  ]
+);
+
+const MAPA_ANG_AR_FAIXA_TRES = new Map(
+  [
+    [0, 0],
+    [5, 1],
+    [10, 2],
+    [15, 3],
+    [20, 4],
+    [30, 5],
+    [40, 6],
+    [50, 7],
+    [60, 8]
+  ]
+);
 
 const externaParedesPlantaRetangular = ({comprimento, largura, altura}) => {
   let alturaRelativa,
@@ -477,17 +525,6 @@ const interpolarCoeficientesDePressaoExterna = (indiceAlturaRelativa, proporcao)
   );
 
   return coeficientes;
-};
-
-// TODO - colocar como método em utils
-const interpolarObjetos = (abs1, obj1, abs2, obj2, aCalcular) => {
-  let coeficientesInterpolados = {};
-
-  for (let val in obj1) {
-    coeficientesInterpolados[val] = Utils.interpolar(abs1, obj1[val], abs2, obj2[val], aCalcular);
-  }
-
-  return coeficientesInterpolados;
 };
 
 const interna = (
@@ -565,9 +602,6 @@ const IndicePressaoInternaAberturaDominanteVentoAZero = (
   coefsPressaoExterna
 ) => {
 
-  // secao = new RegExp(/c/).test(secao) ? 'c' : secao;
-  // secao = new RegExp(/d/).test(secao) ? 'd' : secao;
-
   switch(secao) {
     case 'c1':
       return coefPressaoInternaBarlavento(secao, aberturas, 0);
@@ -600,9 +634,6 @@ const IndicePressaoInternaAberturaDominanteVentoANoventa = (
   coefsPressaoExterna
 ) => {
 
-  // secao = new RegExp(/a/).test(secao) ? 'a' : secao;
-  // secao = new RegExp(/b/).test(secao) ? 'b' : secao;
-
   switch(secao) {
     case 'a1':
       return coefPressaoInternaBarlavento(secao, aberturas, 90);
@@ -629,31 +660,6 @@ const IndicePressaoInternaAberturaDominanteVentoANoventa = (
   }
 };
 
-const PI_AD_BARLAVENTO = new Map(
-  [
-    [1, 0.1],
-    [1.5, 0.3],
-    [2, 0.5],
-    [3, 0.6],
-    [6, 0.8]
-  ]
-);
-
-//  TODO - colocar como método de utils
-const pegarLimitesDeIntervalo = (conjunto, pontoDoIntervalo) => {
-  let anterior;
-
-  for (let val of conjunto) {
-    if (!anterior) anterior = val;
-
-    if (pontoDoIntervalo > anterior && pontoDoIntervalo < val) {
-      return [anterior, val];
-    }
-
-    anterior = val;
-  }
-};
-
 const coefPressaoInternaBarlavento = (secao, aberturas, angulo) => {
   let coeficientePressaoInterna,
       total,
@@ -677,7 +683,7 @@ const coefPressaoInternaBarlavento = (secao, aberturas, angulo) => {
   coeficientePressaoInterna = PI_AD_BARLAVENTO.get(proporcao);
 
   if (!coeficientePressaoInterna) {
-    let limites = pegarLimitesDeIntervalo(PI_AD_BARLAVENTO.keys(), proporcao);
+    let limites = Utils.pegarLimitesDeIntervalo(PI_AD_BARLAVENTO.keys(), proporcao);
 
     return Utils.interpolar(
       limites[0],
@@ -698,14 +704,7 @@ const coefPressaoInternaSotavento = (
   return coeficientes[secao];
 };
 
-const PI_AD_ALTA_SUCCAO = new Map([
-  [0.25, -0.4],
-  [0.5, -0.5],
-  [0.75, -0.6],
-  [1, -0.7],
-  [1.5, -0.8],
-  [3, -0.9]
-]);
+
 
 const coefPressaoInternaAltaSuccao = (
   secao,
@@ -721,12 +720,12 @@ const coefPressaoInternaAltaSuccao = (
 
   if (proporcao >= 3) return -0.9;
 
-  coefPI = PI_AD_ALTA_SUCCAO[proporcao];
+  coefPI = PI_AD_ALTA_SUCCAO.get(proporcao);
 
   if (!coefPI) {
-    let limites = pegarLimitesDeIntervalo(PI_AD_ALTA_SUCCAO.keys(), proporcao);
+    let limites = Utils.pegarLimitesDeIntervalo(PI_AD_ALTA_SUCCAO.keys(), proporcao);
 
-    coefPI = Utils.interpolar(
+     coefPI = Utils.interpolar(
       limites[0],
       PI_AD_ALTA_SUCCAO.get(limites[0]),
       limites[1],
@@ -755,6 +754,8 @@ const externaTelhado = ({
   let indiceAlturaRelativa,
       indiceAngulo,
       mapa;
+
+  inclinacaoTelhado = parseInt(inclinacaoTelhado);
 
   indiceAlturaRelativa = pegarIndiceAlturaRelativaTelhado(altura, largura);
   mapa = qualMapa(indiceAlturaRelativa);
@@ -801,8 +802,8 @@ const pegarValorTabela5 = ({
         coeficienteDois = TABELA_5[indiceAlturaRelativa][indiceAnguloDois];
 
     return {
-      ventoAZero: interpolarObjetos(anguloUm, coeficienteUm.ventoAZero, anguloDois, coeficienteDois.ventoAZero, angulo),
-      ventoANoventa: interpolarObjetos(anguloUm, coeficienteUm.ventoANoventa, anguloDois, coeficienteDois.ventoANoventa, angulo)
+      ventoAZero: Utils.interpolarObjetos(anguloUm, coeficienteUm.ventoAZero, anguloDois, coeficienteDois.ventoAZero, angulo),
+      ventoANoventa: Utils.interpolarObjetos(anguloUm, coeficienteUm.ventoANoventa, anguloDois, coeficienteDois.ventoANoventa, angulo)
     };
   } else {
     return TABELA_5[indiceAlturaRelativa][indiceAnguloUm];
@@ -811,38 +812,13 @@ const pegarValorTabela5 = ({
 
 const qualMapa = (indiceAlturaRelativa) => {
   if (indiceAlturaRelativa === 0 || indiceAlturaRelativa === 1) {
-    return mapaAngulosAlturaRelativaFaixaUmEDois;
+    return MAPA_ANG_AR_FAIXAS_UM_DOIS;
   } else if (indiceAlturaRelativa === 2) {
-    return mapaAngulosAlturaRelativaFaixaTres;
+    return MAPA_ANG_AR_FAIXA_TRES;
   }
 };
 
-const mapaAngulosAlturaRelativaFaixaUmEDois = new Map(
-  [
-    [0, 0],
-    [5, 1],
-    [10, 2],
-    [15, 3],
-    [20, 4],
-    [30, 5],
-    [45, 6],
-    [60, 7]
-  ]
-);
 
-const mapaAngulosAlturaRelativaFaixaTres = new Map(
-  [
-    [0, 0],
-    [5, 1],
-    [10, 2],
-    [15, 3],
-    [20, 4],
-    [30, 5],
-    [40, 6],
-    [50, 7],
-    [60, 8]
-  ]
-);
 
 const acharAngulosTabeladosMaisProximos = (angulo, mapa) => {
   let anterior = 0;
