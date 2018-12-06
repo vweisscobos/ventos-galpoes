@@ -15,6 +15,4 @@ describe(`Bateria de testes para validar a obtenção das pressões efetivas`,  
     topografia: 1,
     velocidadeBasica: 45
   });
-
-  console.log(coeficientesDePressao);
 });

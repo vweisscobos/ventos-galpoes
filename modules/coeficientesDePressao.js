@@ -563,16 +563,34 @@ const calcularIndicePressaoInternaAberturaDominante = (
   coefsPressaoExterna
 ) => {
   let coeficientes = { ventoAZero: 0, ventoANoventa: 0 },
-      secaoDominante;
+      secaoDominante,
+      total = 0;
 
   for (let secao in aberturas) {
-    aberturas[secao] = parseInt(aberturas[secao]);
+    aberturas[secao] = parseFloat(aberturas[secao]);
   }
 
+  // calcula área total de aberturas
   for (let secao in aberturas) {
-    if (!secaoDominante) secaoDominante = secao;
+    total += aberturas[secao];
+  }
 
-    if (aberturas[secao] > aberturas[secaoDominante]) secaoDominante = secao;
+  //  Determina em qual zona a abertura dominante está situada
+  for (let secao in aberturas) {
+    if (aberturas[secao] > (total - aberturas[secao])) secaoDominante = secao;
+  }
+
+  //  Determina se a abertura dominante está espalhada em uma face inteira
+  if (!secaoDominante) {
+    for (let face of ["a", "b", "c", "d"]) {
+      let totalFace = 0;
+
+      for (let secao in aberturas) {
+        if (secao.charAt(0) === face) totalFace += aberturas[secao];
+      }
+
+      if (totalFace > (total - totalFace)) secaoDominante = face;
+    }
   }
 
   coeficientes.ventoAZero = IndicePressaoInternaAberturaDominanteVentoAZero(
@@ -607,10 +625,16 @@ const IndicePressaoInternaAberturaDominanteVentoAZero = (
       return coefPressaoInternaBarlavento(secao, aberturas, 0);
     case 'c2':
       return coefPressaoInternaBarlavento(secao,aberturas, 0);
+    case 'c':
+      return coefPressaoInternaBarlavento(secao,aberturas, 0);
     case 'a1':
       return coefPressaoInternaAltaSuccao(secao, aberturas, 0);
     case 'b1':
       return coefPressaoInternaAltaSuccao(secao, aberturas, 0);
+    case 'a':
+      return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
+    case 'b':
+      return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
     case 'a2':
       return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
     case 'b2':
@@ -619,6 +643,8 @@ const IndicePressaoInternaAberturaDominanteVentoAZero = (
       return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
     case 'b3':
       return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
+    case 'd':
+      return coefPressaoInternaSotavento(secao, coefsPressaoExterna);
     case 'd1':
       return coefPressaoInternaSotavento('d', coefsPressaoExterna);
     case 'd2':
@@ -641,14 +667,22 @@ const IndicePressaoInternaAberturaDominanteVentoANoventa = (
       return coefPressaoInternaBarlavento(secao, aberturas, 90);
     case 'a3':
       return coefPressaoInternaBarlavento(secao, aberturas, 90);
+    case 'a':
+      return coefPressaoInternaBarlavento(secao, aberturas, 90);
     case 'c1':
       return coefPressaoInternaAltaSuccao(secao, aberturas, 90);
     case 'd1':
       return coefPressaoInternaAltaSuccao(secao, aberturas, 90);
+    case 'c':
+      return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
+    case 'd':
+      return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
     case 'c2':
       return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
     case 'd2':
       return coefPressaoInternaBaixaSuccao(secao, coefsPressaoExterna);
+    case 'b':
+      return coefPressaoInternaSotavento(secao, coefsPressaoExterna);
     case 'b1':
       return coefPressaoInternaSotavento('b', coefsPressaoExterna);
     case 'b2':
@@ -701,10 +735,22 @@ const coefPressaoInternaSotavento = (
   secao,
   coeficientes
 ) => {
+  if (secao.length === 1) {
+    let totalCoefs = 0,
+      cont = 0;
+
+    for (let c in coeficientes) {
+      if (c.charAt(0) === secao) {
+        totalCoefs += secao;
+        cont ++;
+      }
+    }
+
+    return totalCoefs / cont;
+  }
+
   return coeficientes[secao];
 };
-
-
 
 const coefPressaoInternaAltaSuccao = (
   secao,
@@ -743,6 +789,20 @@ const coefPressaoInternaBaixaSuccao = (
   secao,
   coeficientes
 ) => {
+  if (secao.length === 1) {
+    let totalCoefs = 0,
+        cont = 0;
+
+    for (let c in coeficientes) {
+      if (c.charAt(0) === secao) {
+        totalCoefs += coeficientes[c];
+        cont ++;
+      }
+    }
+
+    return totalCoefs / cont;
+  }
+
   return coeficientes[secao];
 };
 
@@ -755,7 +815,7 @@ const externaTelhado = ({
       indiceAngulo,
       mapa;
 
-  inclinacaoTelhado = parseInt(inclinacaoTelhado);
+  inclinacaoTelhado = parseFloat(inclinacaoTelhado);
 
   indiceAlturaRelativa = pegarIndiceAlturaRelativaTelhado(altura, largura);
   mapa = qualMapa(indiceAlturaRelativa);
