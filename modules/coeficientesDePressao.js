@@ -508,7 +508,7 @@ const interpolarCoeficientesDePressaoExterna = (indiceAlturaRelativa, proporcao)
   let valoresParaProporcaoTresMeios = TABELA_4[indiceAlturaRelativa][0];
   let valoresParaProporcaoDois = TABELA_4[indiceAlturaRelativa][1];
 
-  coeficientes.ventoAZero = interpolarObjetos(
+  coeficientes.ventoAZero = Utils.interpolarObjetos(
     1.5,
     valoresParaProporcaoTresMeios.ventoAZero,
     2,
@@ -516,7 +516,7 @@ const interpolarCoeficientesDePressaoExterna = (indiceAlturaRelativa, proporcao)
     proporcao
   );
 
-  coeficientes.ventoANoventa = interpolarObjetos(
+  coeficientes.ventoANoventa = Utils.interpolarObjetos(
     1.5,
     valoresParaProporcaoTresMeios.ventoANoventa,
     2,
