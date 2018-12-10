@@ -149,7 +149,7 @@ const isopleta30CentroOesteASudeste = {
       [-18.263313253012, -37.2825098514701]
     ]
   }
-}
+};
 
 const isopleta35CentroOeste = {
   "descricao": "Isopleta elipsal 35 m/s sobre a região centro-oeste",
@@ -171,10 +171,10 @@ const isopleta35CentroOeste = {
       [-15.4167,  -48.2782131985289]
     ]
   }
-}
+};
 
 const isopleta35CentroOesteASudeste = {
-  "descricao": "Isopleta de 30 m/s que cruza as regiões centro-oeste e sudeste",
+  "descricao": "Isopleta de 35 m/s que cruza as regiões centro-oeste e sudeste",
   "velocidade": 35,
   "line": {
     "type": "LineString",
@@ -214,7 +214,7 @@ const isopleta35CentroOesteASudeste = {
 
 const isopleta40CentroOesteASudeste = {
   "descricao": "Isopleta de 45 m/s que cruza as regiões centro-oeste e sudeste",
-  "velocidade": 45,
+  "velocidade": 40,
   "line": {
     "type": "LineString",
     "coordinates": [
@@ -293,7 +293,7 @@ const isopleta40Sudeste = {
 };
 
 const isopleta45Sul = {
-  "descricao": "Isopleta de 345 m/s sobre a região sul",
+  "descricao": "Isopleta de 45 m/s sobre a região sul",
   "velocidade": 45,
   "line": {
     "type": "LineString",
@@ -390,3 +390,16 @@ const isopleta50Sul = {
 };
 
 
+module.exports = {
+  isopleta35Norte,
+  isopleta30NorteANordeste,
+  isopleta30Nordeste,
+  isopleta30CentroOesteASudeste,
+  isopleta35CentroOeste,
+  isopleta35CentroOesteASudeste,
+  isopleta45Sudeste,
+  isopleta40Sudeste,
+  isopleta40CentroOesteASudeste,
+  isopleta45Sul,
+  isopleta50Sul
+};

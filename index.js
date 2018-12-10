@@ -4,9 +4,7 @@ let express = require('express'),
   cookieParser = require('cookie-parser'),
   mongoose = require('mongoose'),
   isopletas = require('./routes/isopletas'),
-  nbr6123 = require('./routes/nbr6123'),
-  velocidadeBasicaModel = require('./models/velocidade-basica'),
-  regioes = require('./assets/isopletas');
+  nbr6123 = require('./routes/nbr6123');
 
 const PORT = process.env.PORT || 5000;
 
@@ -23,23 +21,25 @@ app.use(function(req, res, next) {
   next();
 });
 
+
+uri = 'mongodb://vini-root:isopletas4galpoes@ds121332.mlab.com:21332/vento-galpoes';
 //  connect to mongoose
-// mongoose.connect('mongodb://localhost/ventos');
-// var db = mongoose.connection;
+mongoose.connect(uri).then(
+  () => {
+    console.log("connected")
+  },
+  err => {
+    console.log(err);
+  }
+);
+
+
+let db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
 
 isopletas.initialize(app);
 nbr6123.initialize(app);
-
-
-// velocidadeBasicaModel.inserirRegiaoDeVelocidade(regioes.regiaoV, (err, result) => {
-//   if (err) throw new Error("Something gone wrong: " + err);
-//   console.log("região inserida")
-// });
-//
-// velocidadeBasicaModel.inserirRegiaoDeVelocidade(regioes.regiaoIV, (err, result) => {
-//   if (err) throw new Error("Something gone wrong: " + err);
-//   console.log("região inserida")
-// });
 
 app.get('/', function(req, res) {
   res.send("API rodando");

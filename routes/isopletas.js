@@ -30,7 +30,7 @@ const calcularVelocidadeBasica = (pontoIsopleta1, pontoIsopleta2) => {
 
 module.exports.initialize = (connection) => {
 
-  connection.get('/v1/api-nbr6123.js/velocidade-basica', function(req, res) {
+  connection.get('/v1/api-nbr6123/velocidade-basica', function(req, res) {
     const lat = parseInt(req.query.lat);
     const lng = parseInt(req.query.lng);
 
