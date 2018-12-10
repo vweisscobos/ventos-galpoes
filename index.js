@@ -6,7 +6,7 @@ let express = require('express'),
   isopletas = require('./routes/isopletas'),
   nbr6123 = require('./routes/nbr6123'),
   velocidadeBasicaModel = require('./models/velocidade-basica'),
-  regioes = require('./assets/regioes_docs');
+  regioes = require('./assets/isopletas');
 
 const PORT = process.env.PORT || 5000;
 

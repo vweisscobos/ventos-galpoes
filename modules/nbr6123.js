@@ -1,5 +1,5 @@
 const Topografia = require("./topografia");
-const RugosidadeTerreno = require('./rugosidadeTerreno');
+const RugosidadeDimensoesEAltura = require('./rugosidadeDimensoesEAltura');
 const FatorEstatistico = require('./fatorEstatistico');
 const GetCoeficientePressao = require('./coeficientesDePressao');
 
@@ -35,7 +35,7 @@ const getFatorRugosidade = ({
 }) => {
   let classeDimensoes = getClasseDimensoes(maiorDimensao);
 
-  if (classeDimensoes > 2) return RugosidadeTerreno.determinarFatorRugosidadePorIteracao({
+  if (classeDimensoes > 2) return RugosidadeDimensoesEAltura.determinarFatorRugosidadePorIteracao({
     rugosidade,
     intervaloTempoEstimado: 15,
     topografia,
@@ -45,7 +45,7 @@ const getFatorRugosidade = ({
     fatorTopografico
   });
 
-  else return RugosidadeTerreno.calcularFatorRugosidade(rugosidade, classeDimensoes, alturaPonto);
+  else return RugosidadeDimensoesEAltura.calcularFatorRugosidade(rugosidade, classeDimensoes, alturaPonto);
 };
 
 const maiorValor = (...valores) => {
