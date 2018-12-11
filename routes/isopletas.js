@@ -20,6 +20,7 @@ const pegarIsopletasMaisInfluentes = (isopletas, coordAlvo) => {
 };
 
 const calcularVelocidadeBasica = (pontoIsopleta1, pontoIsopleta2) => {
+  if (!pontoIsopleta2) return pontoIsopleta1.velocidade;
 
   const fator =
     (pontoIsopleta2.velocidade - pontoIsopleta1.velocidade) /
