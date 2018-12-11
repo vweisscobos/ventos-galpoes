@@ -43,9 +43,7 @@ module.exports.initialize = (connection) => {
       }
 
       if (!regiao) {
-        res.json(
-          `Você pesquisou por um ponto não suportado pela nossa API: ${lat}, ${lng}`);
-        return;
+        throw new Error(`Você pesquisou por um ponto não suportado pela nossa API: ${lat}, ${lng}`);
       }
 
       const pontosMaisInfluentes = pegarIsopletasMaisInfluentes(regiao.limites, [lat, lng]);
