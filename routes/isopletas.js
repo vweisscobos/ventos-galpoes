@@ -43,7 +43,7 @@ module.exports.initialize = (connection) => {
       }
 
       if (!regiao) {
-        res.status(404).send({msg: `Você pesquisou por um ponto não suportado pela nossa API: ${lat}, ${lng}`});
+        res.status(404).send(`Você pesquisou por uma região não suportada pela nossa API: ${lat}, ${lng}`);
         return;
       }
 
