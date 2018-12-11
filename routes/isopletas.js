@@ -36,6 +36,7 @@ module.exports.initialize = (connection) => {
 
     Isopletas.pegarRegiaoDeVelocidade([lat, lng], (err, regiao) => {
       if (err) {
+        console.log(err);
         res.json(err);
         return;
       }
