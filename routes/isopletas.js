@@ -35,7 +35,11 @@ module.exports.initialize = (connection) => {
     const lng = parseInt(req.query.lng);
 
     Isopletas.pegarRegiaoDeVelocidade([lat, lng], (err, regiao) => {
-      if (err) throw new Error('Oops! Something gone wrong...');
+      if (err) {
+        res.json(err);
+        return;
+      }
+
       if (!regiao) {
         res.json(
           `Você pesquisou por um ponto não suportado pela nossa API: ${lat}, ${lng}`);
