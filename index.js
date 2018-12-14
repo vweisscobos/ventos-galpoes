@@ -7,11 +7,12 @@ let express = require('express'),
   nbr6123 = require('./routes/nbr6123');
 
 const PORT = process.env.PORT || 5000;
+const MONGO_LOGIN = process.env.LOGIN_SENHA;
+const MONGO_SENHA = process.env.MONGO_SENHA;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Credentials", "true");
@@ -21,8 +22,8 @@ app.use(function(req, res, next) {
   next();
 });
 
+let uri = `mongodb://${MONGO_LOGIN}:${MONGO_SENHA}isopletas4galpoes@ds121332.mlab.com:21332/vento-galpoes`;
 
-uri = 'mongodb://vini-root:isopletas4galpoes@ds121332.mlab.com:21332/vento-galpoes';
 //  connect to mongoose
 mongoose.connect(uri).then(
   () => {
