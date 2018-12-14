@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e800d454-93ff-4012-ab55-46077df326b9" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/routes/isopletas.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/isopletas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/../untitled1/.tmp/" />
     <ignored path="$PROJECT_DIR$/../untitled1/temp/" />
@@ -73,26 +73,27 @@
       </usages-collector>
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="26" />
+          <entry key="project.closed" value="28" />
           <entry key="project.open.time.0" value="5" />
-          <entry key="project.open.time.1" value="8" />
-          <entry key="project.open.time.4" value="2" />
+          <entry key="project.open.time.1" value="9" />
+          <entry key="project.open.time.2" value="1" />
+          <entry key="project.open.time.4" value="3" />
           <entry key="project.open.time.5" value="1" />
           <entry key="project.open.time.6" value="3" />
           <entry key="project.open.time.7" value="5" />
           <entry key="project.open.time.8" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="26" />
+          <entry key="project.opened" value="29" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="js" value="29" />
+          <entry key="js" value="30" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="JavaScript" value="28" />
+          <entry key="JavaScript" value="29" />
           <entry key="UML" value="1" />
         </counts>
       </usages-collector>
@@ -135,7 +136,7 @@
     <favorites_list name="api-ventos" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.6403138">
+    <splitter split-orientation="horizontal" split-proportion="0.39927623">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="false">
@@ -213,8 +214,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/routes/isopletas.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="561">
-                  <caret line="45" column="73" selection-start-line="45" selection-start-column="73" selection-end-line="45" selection-end-column="73" />
+                <state relative-caret-position="517">
+                  <caret line="45" column="29" selection-start-line="45" selection-start-column="29" selection-end-line="45" selection-end-column="29" />
                 </state>
               </provider>
             </entry>
@@ -259,11 +260,20 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/models/velocidade-basica.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="551">
+                <state relative-caret-position="1224">
                   <caret line="72" column="9" lean-forward="true" selection-start-line="72" selection-start-column="9" selection-end-line="72" selection-end-column="9" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/modules/fatorEstatistico.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="255">
+                  <caret line="15" column="2" lean-forward="true" selection-start-line="15" selection-start-column="2" selection-end-line="15" selection-end-column="2" />
                 </state>
               </provider>
             </entry>
@@ -352,10 +362,10 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="x" value="66" />
+    <option name="y" value="154" />
+    <option name="width" value="1452" />
+    <option name="height" value="873" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -400,7 +410,7 @@
   <component name="PropertiesComponent">
     <property name="ToolWindowEvent Log.ShowToolbar" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../aplicacao-ventos-fe" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
@@ -484,12 +494,15 @@
       <workItem from="1544091016940" duration="3838000" />
       <workItem from="1544178330435" duration="4022000" />
       <workItem from="1544523390857" duration="1677000" />
-      <workItem from="1544543453072" duration="8653000" />
+      <workItem from="1544543453072" duration="10354000" />
+      <workItem from="1544620044824" duration="1153000" />
+      <workItem from="1544629503454" duration="1204000" />
+      <workItem from="1544696508829" duration="599000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="283391000" />
+    <option name="totallyTimeSpent" value="288048000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -504,19 +517,19 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.8177874" visible="true" weight="0.12697576" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.81453365" visible="true" weight="0.1264489" />
       <window_info id="Structure" order="1" sideWeight="0.4197731" side_tool="true" weight="0.15858799" />
-      <window_info active="true" id="npm" order="2" sideWeight="0.18221258" side_tool="true" visible="true" weight="0.12697576" />
+      <window_info id="npm" order="2" sideWeight="0.18546638" side_tool="true" visible="true" weight="0.1264489" />
       <window_info id="Favorites" order="3" sideWeight="0.4197731" side_tool="true" weight="0.15858799" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.07583965" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.74499476" weight="0.21691974" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.74499476" weight="0.12689805" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.53951526" weight="0.3308026" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.0824295" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" x="340" y="193" width="1440" height="837" id="Terminal" order="8" sideWeight="0.74288726" type="WINDOWED" visible="true" weight="0.38828632" />
+      <window_info anchor="bottom" x="340" y="193" width="1440" height="837" id="Terminal" order="8" sideWeight="0.74288726" type="WINDOWED" weight="0.38828632" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.4604847" side_tool="true" weight="0.37635574" />
       <window_info anchor="bottom" id="Version Control" order="10" show_stripe_button="false" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -618,13 +631,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/fatorEstatistico.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="2" lean-forward="true" selection-start-line="15" selection-start-column="2" selection-end-line="15" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/modules/rugosidadeDimensoesEAltura.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1972">
@@ -675,6 +681,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/routes/nbr6123.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="50" lean-forward="true" selection-start-line="18" selection-start-column="50" selection-end-line="18" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/isopletas.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="517">
+          <caret line="45" column="29" selection-start-line="45" selection-start-column="29" selection-end-line="45" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/assets/isopletas.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
@@ -691,8 +711,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/nbr6123.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2227">
-          <caret line="131" column="43" selection-start-line="131" selection-start-column="42" selection-end-line="131" selection-end-column="43" />
+        <state relative-caret-position="136">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
         </state>
       </provider>
     </entry>
@@ -703,24 +723,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/nbr6123.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="50" lean-forward="true" selection-start-line="18" selection-start-column="50" selection-end-line="18" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/velocidade-basica.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
+        <state relative-caret-position="1224">
           <caret line="72" column="9" lean-forward="true" selection-start-line="72" selection-start-column="9" selection-end-line="72" selection-end-column="9" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/isopletas.js">
+    <entry file="file://$PROJECT_DIR$/modules/fatorEstatistico.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="45" column="73" selection-start-line="45" selection-start-column="73" selection-end-line="45" selection-end-column="73" />
+        <state relative-caret-position="255">
+          <caret line="15" column="2" lean-forward="true" selection-start-line="15" selection-start-column="2" selection-end-line="15" selection-end-column="2" />
         </state>
       </provider>
     </entry>
